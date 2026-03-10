@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Agent Directory Event Manifest
+
+    This instrumentation manifest defines the event provider, channels, tasks,
+    and event definitions for the Agent Directory system.
+
+    To compile:
+        mc.exe -um AgentDirectory.man
+        rc.exe AgentDirectory.rc
+        link.exe /DLL /NOENTRY /MACHINE:X64 /OUT:AgentDirectory.dll AgentDirectory.res
+
+    To register:
+        wevtutil im AgentDirectory.man /rf:"C:\path\AgentDirectory.dll" /mf:"C:\path\AgentDirectory.dll"
+
+    Provider GUID: {A8B9C0D1-E2F3-4A5B-6C7D-8E9F0A1B2C3D}
+-->
+<instrumentationManifest
+    xmlns="http://schemas.microsoft.com/win/2004/08/events"
+    xmlns:win="http://manifests.microsoft.com/win/2004/08/windows/events"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <instrumentation>
+        <events>
+            <provider
+                name="Microsoft-AgentDirectory"
+                guid="{A8B9C0D1-E2F3-4A5B-6C7D-8E9F0A1B2C3D}"
+                symbol="AGENT_DIRECTORY_PROVIDER"
+                resourceFileName="AgentDirectory.dll"
+                messageFileName="AgentDirectory.dll"
+                parameterFileName="AgentDirectory.dll">
+
+                <!-- Event Channels -->
+                <channels>
+                    <channel
+                        name="Microsoft-AgentDirectory/Operational"
+                        chid="Operational"
+                        symbol="CHANNEL_OPERATIONAL"
+                        type="Operational"
+                        enabled="true"
+                        isolation="Application"
+                        message="$(string.Channel.Operational)">
+                    </channel>
+
+                    <channel
+                        name="Microsoft-AgentDirectory/Admin"
+                        chid="Admin"
+                        symbol="CHANNEL_ADMIN"
+                        type="Admin"
+                        enabled="true"
+                        isolation="Application"
+                        message="$(string.Channel.Admin)">
+                    </channel>
+
+                    <channel
+                        name="Microsoft-AgentDirectory/Debug"
+                        chid="Debug"
+                        symbol="CHANNEL_DEBUG"
+                        type="Debug"
+                        enabled="false"
+                        isolation="Application"
+                        message="$(string.Channel.Debug)">
+                    </channel>
+                </channels>
+
+                <!-- Event Levels (using standard Windows levels) -->
+                <levels>
+                </levels>
+
+                <!-- Event Tasks (Categories) -->
+                <tasks>
+                    <task name="AgentLifecycle"
+                          symbol="TASK_AGENT_LIFECYCLE"
+                          value="1"
+                          message="$(string.Task.AgentLifecycle)"/>
+
+                    <task name="AgentAuthentication"
+                          symbol="TASK_AGENT_AUTHENTICATION"
+                          value="2"
+                          message="$(string.Task.AgentAuthentication)"/>
+
+                    <task name="ToolAccess"
+                          symbol="TASK_TOOL_ACCESS"
+                          value="3"
+                          message="$(string.Task.ToolAccess)"/>
+
+                    <task name="ToolExecution"
+                          symbol="TASK_TOOL_EXECUTION"
+                          value="4"
+                          message="$(string.Task.ToolExecution)"/>
+
+                    <task name="Delegation"
+                          symbol="TASK_DELEGATION"
+                          value="5"
+                          message="$(string.Task.Delegation)"/>
+
+                    <task name="PolicyViolation"
+                          symbol="TASK_POLICY_VIOLATION"
+                          value="6"
+                          message="$(string.Task.PolicyViolation)"/>
+
+                    <task name="TrustChange"
+                          symbol="TASK_TRUST_CHANGE"
+                          value="7"
+                          message="$(string.Task.TrustChange)"/>
+
+                    <task name="ResourceAccess"
+                          symbol="TASK_RESOURCE_ACCESS"
+                          value="8"
+                          message="$(string.Task.ResourceAccess)"/>
+
+                    <task name="SandboxLifecycle"
+                          symbol="TASK_SANDBOX_LIFECYCLE"
+                          value="9"
+                          message="$(string.Task.SandboxLifecycle)"/>
+
+                    <task name="InstructionGPOApplication"
+                          symbol="TASK_INSTRUCTION_GPO_APPLICATION"
+                          value="10"
+                          message="$(string.Task.InstructionGPOApplication)"/>
+                </tasks>
+
+                <!-- Opcodes -->
+                <opcodes>
+                    <opcode name="Start" symbol="OPCODE_START" value="10" message="$(string.Opcode.Start)"/>
+                    <opcode name="Stop" symbol="OPCODE_STOP" value="11" message="$(string.Opcode.Stop)"/>
+                    <opcode name="Grant" symbol="OPCODE_GRANT" value="12" message="$(string.Opcode.Grant)"/>
+                    <opcode name="Revoke" symbol="OPCODE_REVOKE" value="13" message="$(string.Opcode.Revoke)"/>
+                    <opcode name="Deny" symbol="OPCODE_DENY" value="14" message="$(string.Opcode.Deny)"/>
+                </opcodes>
+
+                <!-- Keywords for filtering -->
+                <keywords>
+                    <keyword name="Agent" symbol="KEYWORD_AGENT" mask="0x1" message="$(string.Keyword.Agent)"/>
+                    <keyword name="Tool" symbol="KEYWORD_TOOL" mask="0x2" message="$(string.Keyword.Tool)"/>
+                    <keyword name="Security" symbol="KEYWORD_SECURITY" mask="0x4" message="$(string.Keyword.Security)"/>
+                    <keyword name="Delegation" symbol="KEYWORD_DELEGATION" mask="0x8" message="$(string.Keyword.Delegation)"/>
+                    <keyword name="Audit" symbol="KEYWORD_AUDIT" mask="0x10" message="$(string.Keyword.Audit)"/>
+                    <keyword name="Sandbox" symbol="KEYWORD_SANDBOX" mask="0x20" message="$(string.Keyword.Sandbox)"/>
+                    <keyword name="InstructionGPO" symbol="KEYWORD_INSTRUCTION_GPO" mask="0x40" message="$(string.Keyword.InstructionGPO)"/>
+                </keywords>
+
+                <!-- Event Templates -->
+                <templates>
+                    <!-- Base agent event template -->
+                    <template tid="AgentBaseTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Agent lifecycle template -->
+                    <template tid="AgentLifecycleTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="AgentModel" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="OwnerDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ModifiedBy" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SourceIP" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Authentication template -->
+                    <template tid="AuthenticationTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AuthType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SourceIP" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SourceHost" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="TargetService" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="FailureReason" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ErrorCode" inType="win:UInt32" outType="win:HexInt32"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Tool access template -->
+                    <template tid="ToolAccessTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="ToolId" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ToolDisplayName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ToolCategory" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="RequiredTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="GrantType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="DenialReason" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Tool execution template -->
+                    <template tid="ToolExecutionTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="ToolId" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ToolCategory" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="OnBehalfOf" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SourceIP" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="TargetResource" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CommandLine" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ResultCode" inType="win:UInt32" outType="win:HexInt32"/>
+                        <data name="Duration" inType="win:UInt64" outType="xs:unsignedLong"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Delegation template -->
+                    <template tid="DelegationTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="DelegationType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="OnBehalfOfSid" inType="win:SID" outType="xs:string"/>
+                        <data name="OnBehalfOfName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="TargetService" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="TargetResource" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="GrantedBy" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Policy violation template -->
+                    <template tid="PolicyViolationTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ViolationType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="PolicyName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ViolationDetails" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="RecommendedAction" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AutomaticAction" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Trust change template -->
+                    <template tid="TrustChangeTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="OldTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="NewTrustLevel" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="ChangedBy" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="Justification" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Resource access template -->
+                    <template tid="ResourceAccessTemplate">
+                        <data name="AgentSid" inType="win:SID" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ResourceType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ResourcePath" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AccessType" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="OnBehalfOf" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+                    <!-- Sandbox lifecycle template -->
+                    <template tid="SandboxLifecycleTemplate">
+                        <data name="SandboxName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SandboxDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SecurityProfile" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="Status" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="Endpoint" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="ModifiedBy" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="SourceIP" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+
+                    <!-- Instruction GPO template -->
+                    <template tid="InstructionGPOTemplate">
+                        <data name="GPOName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="GPODN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="GPODisplayName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="InstructionPath" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="Priority" inType="win:UInt32" outType="xs:unsignedInt"/>
+                        <data name="MergeStrategy" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentName" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="AgentDN" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="FailureReason" inType="win:UnicodeString" outType="xs:string"/>
+                        <data name="CorrelationId" inType="win:GUID" outType="xs:GUID"/>
+                    </template>
+                </templates>
+
+                <!-- Event Definitions -->
+                <events>
+                    <!-- Agent Lifecycle Events (1000-1099) -->
+                    <event value="1000"
+                           symbol="AGENT_CREATED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentLifecycle"
+                           opcode="Start"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentCreated)"/>
+
+                    <event value="1001"
+                           symbol="AGENT_MODIFIED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentLifecycle"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentModified)"/>
+
+                    <event value="1002"
+                           symbol="AGENT_DELETED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentLifecycle"
+                           opcode="Stop"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentDeleted)"/>
+
+                    <event value="1003"
+                           symbol="AGENT_ENABLED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentLifecycle"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentEnabled)"/>
+
+                    <event value="1004"
+                           symbol="AGENT_DISABLED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentLifecycle"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentDisabled)"/>
+
+                    <event value="1010"
+                           symbol="AGENT_CREATION_FAILED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="AgentLifecycle"
+                           keywords="Agent Audit"
+                           template="AgentLifecycleTemplate"
+                           message="$(string.Event.AgentCreationFailed)"/>
+
+                    <event value="1011"
+                           symbol="AGENT_CORRUPTED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Error"
+                           task="AgentLifecycle"
+                           keywords="Agent Security"
+                           template="AgentBaseTemplate"
+                           message="$(string.Event.AgentCorrupted)"/>
+
+                    <!-- Authentication Events (2000-2099) -->
+                    <event value="2000"
+                           symbol="AGENT_LOGON_SUCCESS"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentAuthentication"
+                           opcode="Start"
+                           keywords="Agent Security Audit"
+                           template="AuthenticationTemplate"
+                           message="$(string.Event.AgentLogonSuccess)"/>
+
+                    <event value="2001"
+                           symbol="AGENT_LOGON_FAILURE"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="AgentAuthentication"
+                           keywords="Agent Security Audit"
+                           template="AuthenticationTemplate"
+                           message="$(string.Event.AgentLogonFailure)"/>
+
+                    <event value="2002"
+                           symbol="AGENT_LOGOFF"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="AgentAuthentication"
+                           opcode="Stop"
+                           keywords="Agent Audit"
+                           template="AuthenticationTemplate"
+                           message="$(string.Event.AgentLogoff)"/>
+
+                    <event value="2020"
+                           symbol="AGENT_CREDENTIAL_COMPROMISE"
+                           version="1"
+                           channel="Admin"
+                           level="win:Critical"
+                           task="AgentAuthentication"
+                           keywords="Agent Security"
+                           template="AuthenticationTemplate"
+                           message="$(string.Event.AgentCredentialCompromise)"/>
+
+                    <!-- Tool Access Events (3000-3099) -->
+                    <event value="3000"
+                           symbol="TOOL_ACCESS_GRANTED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ToolAccess"
+                           opcode="Grant"
+                           keywords="Tool Audit"
+                           template="ToolAccessTemplate"
+                           message="$(string.Event.ToolAccessGranted)"/>
+
+                    <event value="3001"
+                           symbol="TOOL_ACCESS_DENIED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="ToolAccess"
+                           opcode="Deny"
+                           keywords="Tool Security Audit"
+                           template="ToolAccessTemplate"
+                           message="$(string.Event.ToolAccessDenied)"/>
+
+                    <event value="3002"
+                           symbol="TOOL_ACCESS_REVOKED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ToolAccess"
+                           opcode="Revoke"
+                           keywords="Tool Audit"
+                           template="ToolAccessTemplate"
+                           message="$(string.Event.ToolAccessRevoked)"/>
+
+                    <!-- Tool Execution Events (4000-4099) -->
+                    <event value="4000"
+                           symbol="TOOL_EXECUTION_STARTED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ToolExecution"
+                           opcode="Start"
+                           keywords="Tool Audit"
+                           template="ToolExecutionTemplate"
+                           message="$(string.Event.ToolExecutionStarted)"/>
+
+                    <event value="4001"
+                           symbol="TOOL_EXECUTION_COMPLETED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ToolExecution"
+                           opcode="Stop"
+                           keywords="Tool Audit"
+                           template="ToolExecutionTemplate"
+                           message="$(string.Event.ToolExecutionCompleted)"/>
+
+                    <event value="4002"
+                           symbol="TOOL_EXECUTION_FAILED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="ToolExecution"
+                           keywords="Tool Audit"
+                           template="ToolExecutionTemplate"
+                           message="$(string.Event.ToolExecutionFailed)"/>
+
+                    <event value="4010"
+                           symbol="TOOL_CONSTRAINT_VIOLATION"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="ToolExecution"
+                           keywords="Tool Security"
+                           template="ToolExecutionTemplate"
+                           message="$(string.Event.ToolConstraintViolation)"/>
+
+                    <event value="4020"
+                           symbol="TOOL_COMMAND_EXECUTED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ToolExecution"
+                           keywords="Tool Audit"
+                           template="ToolExecutionTemplate"
+                           message="$(string.Event.ToolCommandExecuted)"/>
+
+                    <!-- Delegation Events (5000-5099) -->
+                    <event value="5000"
+                           symbol="DELEGATION_GRANTED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="Delegation"
+                           opcode="Grant"
+                           keywords="Delegation Audit"
+                           template="DelegationTemplate"
+                           message="$(string.Event.DelegationGranted)"/>
+
+                    <event value="5001"
+                           symbol="DELEGATION_REVOKED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="Delegation"
+                           opcode="Revoke"
+                           keywords="Delegation Audit"
+                           template="DelegationTemplate"
+                           message="$(string.Event.DelegationRevoked)"/>
+
+                    <event value="5002"
+                           symbol="DELEGATION_USED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="Delegation"
+                           keywords="Delegation Audit"
+                           template="DelegationTemplate"
+                           message="$(string.Event.DelegationUsed)"/>
+
+                    <event value="5020"
+                           symbol="UNAUTHORIZED_DELEGATION"
+                           version="1"
+                           channel="Admin"
+                           level="win:Critical"
+                           task="Delegation"
+                           keywords="Delegation Security"
+                           template="DelegationTemplate"
+                           message="$(string.Event.UnauthorizedDelegation)"/>
+
+                    <!-- Policy Violation Events (6000-6099) -->
+                    <event value="6000"
+                           symbol="POLICY_VIOLATION_MINOR"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="PolicyViolation"
+                           keywords="Security Audit"
+                           template="PolicyViolationTemplate"
+                           message="$(string.Event.PolicyViolationMinor)"/>
+
+                    <event value="6001"
+                           symbol="POLICY_VIOLATION_MAJOR"
+                           version="1"
+                           channel="Admin"
+                           level="win:Error"
+                           task="PolicyViolation"
+                           keywords="Security Audit"
+                           template="PolicyViolationTemplate"
+                           message="$(string.Event.PolicyViolationMajor)"/>
+
+                    <event value="6002"
+                           symbol="POLICY_VIOLATION_CRITICAL"
+                           version="1"
+                           channel="Admin"
+                           level="win:Critical"
+                           task="PolicyViolation"
+                           keywords="Security"
+                           template="PolicyViolationTemplate"
+                           message="$(string.Event.PolicyViolationCritical)"/>
+
+                    <event value="6020"
+                           symbol="MALICIOUS_BEHAVIOR_DETECTED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Critical"
+                           task="PolicyViolation"
+                           keywords="Security"
+                           template="PolicyViolationTemplate"
+                           message="$(string.Event.MaliciousBehaviorDetected)"/>
+
+                    <!-- Trust Change Events (7000-7099) -->
+                    <event value="7000"
+                           symbol="TRUST_LEVEL_INCREASED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="TrustChange"
+                           keywords="Agent Audit"
+                           template="TrustChangeTemplate"
+                           message="$(string.Event.TrustLevelIncreased)"/>
+
+                    <event value="7001"
+                           symbol="TRUST_LEVEL_DECREASED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="TrustChange"
+                           keywords="Agent Audit"
+                           template="TrustChangeTemplate"
+                           message="$(string.Event.TrustLevelDecreased)"/>
+
+                    <!-- Resource Access Events (8000-8099) -->
+                    <event value="8000"
+                           symbol="FILE_ACCESS"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ResourceAccess"
+                           keywords="Audit"
+                           template="ResourceAccessTemplate"
+                           message="$(string.Event.FileAccess)"/>
+
+                    <event value="8001"
+                           symbol="NETWORK_CONNECTION"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="ResourceAccess"
+                           keywords="Audit"
+                           template="ResourceAccessTemplate"
+                           message="$(string.Event.NetworkConnection)"/>
+
+                    <event value="8010"
+                           symbol="SENSITIVE_RESOURCE_ACCESS"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="ResourceAccess"
+                           keywords="Security Audit"
+                           template="ResourceAccessTemplate"
+                           message="$(string.Event.SensitiveResourceAccess)"/>
+
+                    <!-- Sandbox Lifecycle Events (9000-9099) -->
+                    <event value="9000"
+                           symbol="SANDBOX_CREATED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="SandboxLifecycle"
+                           opcode="Start"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxCreated)"/>
+
+                    <event value="9001"
+                           symbol="SANDBOX_MODIFIED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="SandboxLifecycle"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxModified)"/>
+
+                    <event value="9002"
+                           symbol="SANDBOX_DELETED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="SandboxLifecycle"
+                           opcode="Stop"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxDeleted)"/>
+
+                    <event value="9003"
+                           symbol="SANDBOX_ACTIVATED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="SandboxLifecycle"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxActivated)"/>
+
+                    <event value="9004"
+                           symbol="SANDBOX_DEACTIVATED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="SandboxLifecycle"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxDeactivated)"/>
+
+                    <event value="9010"
+                           symbol="SANDBOX_CREATION_FAILED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="SandboxLifecycle"
+                           keywords="Sandbox Audit"
+                           template="SandboxLifecycleTemplate"
+                           message="$(string.Event.SandboxCreationFailed)"/>
+
+                    <!-- Instruction GPO Application Events (10000-10099) -->
+                    <event value="10000"
+                           symbol="INSTRUCTION_GPO_APPLIED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="InstructionGPOApplication"
+                           keywords="InstructionGPO Audit"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOApplied)"/>
+
+                    <event value="10001"
+                           symbol="INSTRUCTION_GPO_FAILED"
+                           version="1"
+                           channel="Admin"
+                           level="win:Warning"
+                           task="InstructionGPOApplication"
+                           keywords="InstructionGPO Audit"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOFailed)"/>
+
+                    <event value="10002"
+                           symbol="INSTRUCTION_GPO_UPDATED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="InstructionGPOApplication"
+                           keywords="InstructionGPO Audit"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOUpdated)"/>
+
+                    <event value="10003"
+                           symbol="INSTRUCTION_GPO_LINKED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="InstructionGPOApplication"
+                           opcode="Grant"
+                           keywords="InstructionGPO Audit"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOLinked)"/>
+
+                    <event value="10004"
+                           symbol="INSTRUCTION_GPO_UNLINKED"
+                           version="1"
+                           channel="Operational"
+                           level="win:Informational"
+                           task="InstructionGPOApplication"
+                           opcode="Revoke"
+                           keywords="InstructionGPO Audit"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOUnlinked)"/>
+
+                    <event value="10010"
+                           symbol="INSTRUCTION_GPO_INTEGRITY_FAILURE"
+                           version="1"
+                           channel="Admin"
+                           level="win:Error"
+                           task="InstructionGPOApplication"
+                           keywords="InstructionGPO Security"
+                           template="InstructionGPOTemplate"
+                           message="$(string.Event.InstructionGPOIntegrityFailure)"/>
+                </events>
+            </provider>
+        </events>
+    </instrumentation>
+
+    <localization>
+        <resources culture="en-US">
+            <stringTable>
+                <!-- Channel strings -->
+                <string id="Channel.Operational" value="Microsoft-AgentDirectory/Operational"/>
+                <string id="Channel.Admin" value="Microsoft-AgentDirectory/Admin"/>
+                <string id="Channel.Debug" value="Microsoft-AgentDirectory/Debug"/>
+
+                <!-- Task strings -->
+                <string id="Task.AgentLifecycle" value="Agent Lifecycle"/>
+                <string id="Task.AgentAuthentication" value="Agent Authentication"/>
+                <string id="Task.ToolAccess" value="Tool Access"/>
+                <string id="Task.ToolExecution" value="Tool Execution"/>
+                <string id="Task.Delegation" value="Delegation"/>
+                <string id="Task.PolicyViolation" value="Policy Violation"/>
+                <string id="Task.TrustChange" value="Trust Change"/>
+                <string id="Task.ResourceAccess" value="Resource Access"/>
+                <string id="Task.SandboxLifecycle" value="Sandbox Lifecycle"/>
+                <string id="Task.InstructionGPOApplication" value="Instruction GPO Application"/>
+
+                <!-- Opcode strings -->
+                <string id="Opcode.Start" value="Start"/>
+                <string id="Opcode.Stop" value="Stop"/>
+                <string id="Opcode.Grant" value="Grant"/>
+                <string id="Opcode.Revoke" value="Revoke"/>
+                <string id="Opcode.Deny" value="Deny"/>
+
+                <!-- Keyword strings -->
+                <string id="Keyword.Agent" value="Agent"/>
+                <string id="Keyword.Tool" value="Tool"/>
+                <string id="Keyword.Security" value="Security"/>
+                <string id="Keyword.Delegation" value="Delegation"/>
+                <string id="Keyword.Audit" value="Audit"/>
+                <string id="Keyword.Sandbox" value="Sandbox"/>
+                <string id="Keyword.InstructionGPO" value="Instruction GPO"/>
+
+                <!-- Event message strings -->
+                <string id="Event.AgentCreated" value="Agent '%2' was created. Type: %4, Trust Level: %5, Model: %6, Owner: %7"/>
+                <string id="Event.AgentModified" value="Agent '%2' was modified by %8 from %9"/>
+                <string id="Event.AgentDeleted" value="Agent '%2' was deleted by %8 from %9"/>
+                <string id="Event.AgentEnabled" value="Agent '%2' was enabled by %8"/>
+                <string id="Event.AgentDisabled" value="Agent '%2' was disabled by %8"/>
+                <string id="Event.AgentCreationFailed" value="Failed to create agent '%2'. Error: %8"/>
+                <string id="Event.AgentCorrupted" value="Agent '%2' object corruption detected"/>
+
+                <string id="Event.AgentLogonSuccess" value="Agent '%2' successfully authenticated via %4 from %5"/>
+                <string id="Event.AgentLogonFailure" value="Agent '%2' authentication failed via %4 from %5. Reason: %8"/>
+                <string id="Event.AgentLogoff" value="Agent '%2' session ended"/>
+                <string id="Event.AgentCredentialCompromise" value="Potential credential compromise detected for agent '%2'"/>
+
+                <string id="Event.ToolAccessGranted" value="Agent '%2' was granted access to tool '%4' (%5)"/>
+                <string id="Event.ToolAccessDenied" value="Agent '%2' was denied access to tool '%4'. Reason: %9"/>
+                <string id="Event.ToolAccessRevoked" value="Agent '%2' tool access to '%4' was revoked"/>
+
+                <string id="Event.ToolExecutionStarted" value="Agent '%2' started using tool '%6' targeting '%10'"/>
+                <string id="Event.ToolExecutionCompleted" value="Agent '%2' completed using tool '%6'. Duration: %13ms, Result: %12"/>
+                <string id="Event.ToolExecutionFailed" value="Agent '%2' failed using tool '%6'. Error: %12"/>
+                <string id="Event.ToolConstraintViolation" value="Agent '%2' violated constraints while using tool '%6'"/>
+                <string id="Event.ToolCommandExecuted" value="Agent '%2' executed command via '%6': %11"/>
+
+                <string id="Event.DelegationGranted" value="Agent '%2' was granted %3 delegation to %5 by %8"/>
+                <string id="Event.DelegationRevoked" value="Agent '%2' delegation to %5 was revoked by %8"/>
+                <string id="Event.DelegationUsed" value="Agent '%2' acted on behalf of '%5' accessing %6"/>
+                <string id="Event.UnauthorizedDelegation" value="CRITICAL: Agent '%2' attempted unauthorized delegation as '%5' to '%6'"/>
+
+                <string id="Event.PolicyViolationMinor" value="Agent '%2' minor policy violation: %3 - %5"/>
+                <string id="Event.PolicyViolationMajor" value="Agent '%2' major policy violation: %3 - %5"/>
+                <string id="Event.PolicyViolationCritical" value="CRITICAL: Agent '%2' critical policy violation: %3 - %5"/>
+                <string id="Event.MaliciousBehaviorDetected" value="CRITICAL: Potential malicious behavior detected from agent '%2': %3"/>
+
+                <string id="Event.TrustLevelIncreased" value="Agent '%2' trust level increased from %3 to %4 by %5. Reason: %6"/>
+                <string id="Event.TrustLevelDecreased" value="Agent '%2' trust level decreased from %3 to %4 by %5. Reason: %6"/>
+
+                <string id="Event.FileAccess" value="Agent '%2' accessed %3 file: %4"/>
+                <string id="Event.NetworkConnection" value="Agent '%2' made network connection to %4"/>
+                <string id="Event.SensitiveResourceAccess" value="Agent '%2' accessed sensitive resource: %4"/>
+
+                <string id="Event.SandboxCreated" value="Sandbox '%1' was created. Profile: %3, Endpoint: %5"/>
+                <string id="Event.SandboxModified" value="Sandbox '%1' was modified by %7 from %8"/>
+                <string id="Event.SandboxDeleted" value="Sandbox '%1' was deleted by %7 from %8"/>
+                <string id="Event.SandboxActivated" value="Sandbox '%1' was activated for agent '%6'"/>
+                <string id="Event.SandboxDeactivated" value="Sandbox '%1' was deactivated"/>
+                <string id="Event.SandboxCreationFailed" value="Failed to create sandbox '%1'. Error from %8"/>
+
+                <string id="Event.InstructionGPOApplied" value="Instruction GPO '%1' (%3) applied to agent '%7' with priority %5 using %6 merge"/>
+                <string id="Event.InstructionGPOFailed" value="Instruction GPO '%1' failed to apply to agent '%7'. Reason: %9"/>
+                <string id="Event.InstructionGPOUpdated" value="Instruction GPO '%1' (%3) was updated. Path: %4"/>
+                <string id="Event.InstructionGPOLinked" value="Instruction GPO '%1' was linked to agent '%7'"/>
+                <string id="Event.InstructionGPOUnlinked" value="Instruction GPO '%1' was unlinked from agent '%7'"/>
+                <string id="Event.InstructionGPOIntegrityFailure" value="INTEGRITY FAILURE: Instruction GPO '%1' content at '%4' failed integrity check. Reason: %9"/>
+            </stringTable>
+        </resources>
+    </localization>
+</instrumentationManifest>

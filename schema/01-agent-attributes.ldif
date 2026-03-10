@@ -1,0 +1,280 @@
+# Agent Directory Schema Extension - Agent Attributes
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.x
+#
+# This file defines all custom attributes for the msDS-Agent object class.
+
+# ============================================================================
+# msDS-AgentType
+# Classification of the agent: autonomous, assistant, tool, orchestrator
+# ============================================================================
+dn: CN=msDS-AgentType,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentType
+lDAPDisplayName: msDS-AgentType
+adminDisplayName: Agent Type
+adminDescription: Classification of the agent (autonomous, assistant, tool, orchestrator)
+attributeId: 1.3.6.1.4.1.99999.2.1
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentCapabilities
+# List of registered capabilities/skills the agent has
+# ============================================================================
+dn: CN=msDS-AgentCapabilities,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentCapabilities
+lDAPDisplayName: msDS-AgentCapabilities
+adminDisplayName: Agent Capabilities
+adminDescription: List of registered capabilities the agent possesses
+attributeId: 1.3.6.1.4.1.99999.2.2
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentOwner
+# Distinguished name of the identity responsible for this agent
+# ============================================================================
+dn: CN=msDS-AgentOwner,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentOwner
+lDAPDisplayName: msDS-AgentOwner
+adminDisplayName: Agent Owner
+adminDescription: Distinguished name of the identity responsible for this agent
+attributeId: 1.3.6.1.4.1.99999.2.3
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentParent
+# Distinguished name of a parent agent for hierarchical relationships
+# ============================================================================
+dn: CN=msDS-AgentParent,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentParent
+lDAPDisplayName: msDS-AgentParent
+adminDisplayName: Agent Parent
+adminDescription: Distinguished name of parent agent for hierarchical relationships
+attributeId: 1.3.6.1.4.1.99999.2.4
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentTrustLevel
+# Trust tier from 0 (Untrusted) to 4 (System)
+# ============================================================================
+dn: CN=msDS-AgentTrustLevel,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentTrustLevel
+lDAPDisplayName: msDS-AgentTrustLevel
+adminDisplayName: Agent Trust Level
+adminDescription: Trust tier for the agent (0=Untrusted, 1=Basic, 2=Standard, 3=Elevated, 4=System)
+attributeId: 1.3.6.1.4.1.99999.2.5
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 4
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentRuntimeEndpoint (DEPRECATED - use msDS-SandboxEndpoint on sandbox)
+# URI where the agent can be accessed
+# Retained for backward compatibility; new deployments should use sandbox endpoints.
+# ============================================================================
+dn: CN=msDS-AgentRuntimeEndpoint,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentRuntimeEndpoint
+lDAPDisplayName: msDS-AgentRuntimeEndpoint
+adminDisplayName: Agent Runtime Endpoint
+adminDescription: URI endpoint where the agent runtime is accessible (DEPRECATED - use sandbox)
+attributeId: 1.3.6.1.4.1.99999.2.6
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentModel
+# AI model identifier (e.g., claude-opus-4-5, gpt-4)
+# ============================================================================
+dn: CN=msDS-AgentModel,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentModel
+lDAPDisplayName: msDS-AgentModel
+adminDisplayName: Agent Model
+adminDescription: AI model identifier for the agent (e.g., claude-opus-4-5)
+attributeId: 1.3.6.1.4.1.99999.2.7
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentPolicies
+# Applied policy identifiers or DNs
+# ============================================================================
+dn: CN=msDS-AgentPolicies,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentPolicies
+lDAPDisplayName: msDS-AgentPolicies
+adminDisplayName: Agent Policies
+adminDescription: List of policy identifiers or DNs applied to the agent
+attributeId: 1.3.6.1.4.1.99999.2.8
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentDelegationScope
+# Service principal names the agent can access via delegation
+# ============================================================================
+dn: CN=msDS-AgentDelegationScope,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentDelegationScope
+lDAPDisplayName: msDS-AgentDelegationScope
+adminDisplayName: Agent Delegation Scope
+adminDescription: Service principals the agent can access on behalf of delegating users
+attributeId: 1.3.6.1.4.1.99999.2.9
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentAuditLevel
+# Required audit verbosity (0=Minimal, 1=Standard, 2=Detailed, 3=Debug)
+# ============================================================================
+dn: CN=msDS-AgentAuditLevel,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentAuditLevel
+lDAPDisplayName: msDS-AgentAuditLevel
+adminDisplayName: Agent Audit Level
+adminDescription: Required audit verbosity for this agent (0=Minimal, 1=Standard, 2=Detailed, 3=Debug)
+attributeId: 1.3.6.1.4.1.99999.2.10
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 0
+rangeLower: 0
+rangeUpper: 3
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentAuthorizedTools
+# Links to msDS-AgentTool objects the agent is authorized to use
+# ============================================================================
+dn: CN=msDS-AgentAuthorizedTools,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentAuthorizedTools
+lDAPDisplayName: msDS-AgentAuthorizedTools
+adminDisplayName: Agent Authorized Tools
+adminDescription: Links to tool objects the agent is authorized to use
+attributeId: 1.3.6.1.4.1.99999.2.11
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentDeniedTools
+# Links to msDS-AgentTool objects explicitly denied (overrides grants)
+# ============================================================================
+dn: CN=msDS-AgentDeniedTools,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentDeniedTools
+lDAPDisplayName: msDS-AgentDeniedTools
+adminDisplayName: Agent Denied Tools
+adminDescription: Links to tool objects explicitly denied to the agent
+attributeId: 1.3.6.1.4.1.99999.2.12
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentSandbox
+# Links to msDS-AgentSandbox objects where this agent can run
+# ============================================================================
+dn: CN=msDS-AgentSandbox,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentSandbox
+lDAPDisplayName: msDS-AgentSandbox
+adminDisplayName: Agent Sandbox
+adminDescription: Links to sandbox objects where this agent is authorized to run
+attributeId: 1.3.6.1.4.1.99999.2.13
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-AgentInstructionGPOs
+# Links to msDS-AgentInstructionGPO objects that provide this agent's system prompt
+# ============================================================================
+dn: CN=msDS-AgentInstructionGPOs,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentInstructionGPOs
+lDAPDisplayName: msDS-AgentInstructionGPOs
+adminDisplayName: Agent Instruction GPOs
+adminDescription: Links to instruction GPO objects that provide this agent's system prompt
+attributeId: 1.3.6.1.4.1.99999.2.14
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE

@@ -1,0 +1,13 @@
+# Environment files with secrets
+**/.env
+*.env.local
+!**/.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db

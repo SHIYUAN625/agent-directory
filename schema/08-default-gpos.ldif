@@ -1,0 +1,101 @@
+# Agent Directory Schema Extension - Default Instruction GPOs
+#
+# IMPORTANT: Replace DC=X with your actual domain components
+# Example: DC=corp,DC=contoso,DC=com
+#
+# Instruction content (markdown) is stored in SYSVOL at:
+#   AgentInstructions/{gpo-name}/instructions.md
+
+# ============================================================================
+# BASE INSTRUCTIONS (Priority 0-99)
+# Apply to all agents regardless of type or trust level
+# ============================================================================
+
+dn: CN=base-agent-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: base-agent-instructions
+msDS-GPODisplayName: Base Agent Instructions
+msDS-GPOInstructionPath: AgentInstructions/base-agent-instructions/instructions.md
+msDS-GPOPriority: 0
+msDS-GPOMergeStrategy: append
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Foundation system prompt applied to every agent in the domain
+
+# ============================================================================
+# TYPE INSTRUCTIONS (Priority 100-199)
+# Apply to agents of specific types
+# ============================================================================
+
+dn: CN=type-assistant-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: type-assistant-instructions
+msDS-GPODisplayName: Assistant Agent Instructions
+msDS-GPOInstructionPath: AgentInstructions/type-assistant-instructions/instructions.md
+msDS-GPOPriority: 100
+msDS-GPOMergeStrategy: append
+msDS-GPOAppliesToTypes: assistant
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Instructions for interactive assistant agents
+
+dn: CN=type-autonomous-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: type-autonomous-instructions
+msDS-GPODisplayName: Autonomous Agent Instructions
+msDS-GPOInstructionPath: AgentInstructions/type-autonomous-instructions/instructions.md
+msDS-GPOPriority: 100
+msDS-GPOMergeStrategy: append
+msDS-GPOAppliesToTypes: autonomous
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Instructions for autonomous task-execution agents
+
+dn: CN=type-coordinator-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: type-coordinator-instructions
+msDS-GPODisplayName: Coordinator Agent Instructions
+msDS-GPOInstructionPath: AgentInstructions/type-coordinator-instructions/instructions.md
+msDS-GPOPriority: 100
+msDS-GPOMergeStrategy: append
+msDS-GPOAppliesToTypes: coordinator
+msDS-GPOAppliesToTypes: orchestrator
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Instructions for coordinator and orchestrator agents
+
+dn: CN=type-tool-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: type-tool-instructions
+msDS-GPODisplayName: Tool Agent Instructions
+msDS-GPOInstructionPath: AgentInstructions/type-tool-instructions/instructions.md
+msDS-GPOPriority: 100
+msDS-GPOMergeStrategy: append
+msDS-GPOAppliesToTypes: tool
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Instructions for single-purpose tool agents
+
+# ============================================================================
+# TRUST LEVEL INSTRUCTIONS (Priority 200)
+# Apply to agents at specific trust levels
+# ============================================================================
+
+dn: CN=trust-elevated-instructions,CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentInstructionGPO
+cn: trust-elevated-instructions
+msDS-GPODisplayName: Elevated Trust Instructions
+msDS-GPOInstructionPath: AgentInstructions/trust-elevated-instructions/instructions.md
+msDS-GPOPriority: 200
+msDS-GPOMergeStrategy: append
+msDS-GPOAppliesToTrustLevels: 3
+msDS-GPOAppliesToTrustLevels: 4
+msDS-GPOEnabled: TRUE
+msDS-GPOVersion: 1.0.0
+description: Additional instructions for elevated-trust agents (spawn, delegate, manage)

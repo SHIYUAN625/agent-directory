@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+
+# System packages: GSSAPI LDAP + Kerberos client + Python
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip \
+    ldap-utils libsasl2-modules-gssapi-mit \
+    krb5-user \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python packages: async NATS client
+RUN pip3 install nats-py
+
+# Kerberos config (matches DC provisioning in entrypoint.sh)
+# dns_lookup_kdc=false is CRITICAL — prevents SRV lookup through Docker's broken DNS
+RUN printf '[libdefaults]\n  default_realm = AUTONOMY.LOCAL\n  dns_lookup_realm = false\n  dns_lookup_kdc = false\n  rdns = false\n\n[realms]\n  AUTONOMY.LOCAL = {\n    kdc = dc1.autonomy.local\n    admin_server = dc1.autonomy.local\n  }\n\n[domain_realm]\n  .autonomy.local = AUTONOMY.LOCAL\n  autonomy.local = AUTONOMY.LOCAL\n' > /etc/krb5.conf
+
+# Copy enterprise package (for EnterpriseAgent, ConfigAssembler, etc.)
+# Results in /opt/enterprise/enterprise/__init__.py etc.
+# With PYTHONPATH=/opt/enterprise, "import enterprise.agent.base" works.
+COPY enterprise/ /opt/enterprise/enterprise/
+ENV PYTHONPATH=/opt/enterprise
+
+# Copy E2E test and tool mapping
+COPY samba4/docker/e2e-test.py /opt/e2e-test/e2e-test.py
+COPY samba4/docker/submit-goal.py /opt/e2e-test/submit-goal.py
+COPY samba4/docker/run-enterprise-agent.py /opt/e2e-test/run-enterprise-agent.py
+COPY samba4/docker/tool-mapping.json /opt/e2e-test/tool-mapping.json
+
+ENTRYPOINT ["python3", "/opt/e2e-test/e2e-test.py"]

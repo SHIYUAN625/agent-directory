@@ -1,0 +1,533 @@
+# Agent Directory Schema Extension - Default Tool Definitions
+#
+# This file creates pre-defined tool objects for common applications and utilities.
+# These provide a starting point for tool-based authorization.
+#
+# Prerequisites:
+#   - Tool class (04-tool-class.ldif) must be loaded
+#   - Agent Tools container (05-containers.ldif) must be created
+#
+# IMPORTANT: Replace DC=X with your actual domain components
+# Example: DC=corp,DC=contoso,DC=com
+
+# ============================================================================
+# SHELL & SCRIPTING TOOLS
+# ============================================================================
+
+dn: CN=microsoft.powershell,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.powershell
+msDS-ToolIdentifier: microsoft.powershell
+msDS-ToolDisplayName: PowerShell
+msDS-ToolCategory: shell
+msDS-ToolExecutable: %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: ExecutionPolicy=RemoteSigned
+msDS-ToolConstraints: TranscriptLogging=Required
+msDS-ToolAuditRequired: TRUE
+description: Windows PowerShell command-line shell and scripting language
+
+dn: CN=microsoft.powershell.constrained,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.powershell.constrained
+msDS-ToolIdentifier: microsoft.powershell.constrained
+msDS-ToolDisplayName: PowerShell (Constrained Language)
+msDS-ToolCategory: shell
+msDS-ToolExecutable: %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: LanguageMode=ConstrainedLanguage
+msDS-ToolConstraints: NoAddType=True
+msDS-ToolConstraints: TranscriptLogging=Required
+msDS-ToolAuditRequired: TRUE
+description: PowerShell with Constrained Language Mode for restricted operations
+
+dn: CN=microsoft.cmd,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.cmd
+msDS-ToolIdentifier: microsoft.cmd
+msDS-ToolDisplayName: Command Prompt
+msDS-ToolCategory: shell
+msDS-ToolExecutable: %SystemRoot%\System32\cmd.exe
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolAuditRequired: TRUE
+description: Windows Command Prompt (cmd.exe)
+
+dn: CN=gnu.bash,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: gnu.bash
+msDS-ToolIdentifier: gnu.bash
+msDS-ToolDisplayName: Bash Shell
+msDS-ToolCategory: shell
+msDS-ToolExecutable: /bin/bash
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolAuditRequired: TRUE
+description: GNU Bash shell (native or via WSL)
+
+dn: CN=python.interpreter,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: python.interpreter
+msDS-ToolIdentifier: python.interpreter
+msDS-ToolDisplayName: Python Interpreter
+msDS-ToolCategory: development
+msDS-ToolExecutable: python.exe
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolAuditRequired: TRUE
+description: Python programming language interpreter
+
+# ============================================================================
+# MICROSOFT OFFICE APPLICATIONS
+# ============================================================================
+
+dn: CN=microsoft.word,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.word
+msDS-ToolIdentifier: microsoft.word
+msDS-ToolDisplayName: Microsoft Word
+msDS-ToolCategory: office
+msDS-ToolExecutable: WINWORD.EXE
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: MacrosEnabled=False
+msDS-ToolConstraints: ExternalContent=Blocked
+msDS-ToolAuditRequired: FALSE
+description: Microsoft Word document processor
+
+dn: CN=microsoft.excel,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.excel
+msDS-ToolIdentifier: microsoft.excel
+msDS-ToolDisplayName: Microsoft Excel
+msDS-ToolCategory: office
+msDS-ToolExecutable: EXCEL.EXE
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: MacrosEnabled=False
+msDS-ToolConstraints: ExternalDataConnections=RequireApproval
+msDS-ToolAuditRequired: FALSE
+description: Microsoft Excel spreadsheet application
+
+dn: CN=microsoft.outlook,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.outlook
+msDS-ToolIdentifier: microsoft.outlook
+msDS-ToolDisplayName: Microsoft Outlook
+msDS-ToolCategory: office
+msDS-ToolExecutable: OUTLOOK.EXE
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: SendOnBehalf=RequiresDelegation
+msDS-ToolAuditRequired: TRUE
+description: Microsoft Outlook email and calendar client
+
+dn: CN=microsoft.powerpoint,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.powerpoint
+msDS-ToolIdentifier: microsoft.powerpoint
+msDS-ToolDisplayName: Microsoft PowerPoint
+msDS-ToolCategory: office
+msDS-ToolExecutable: POWERPNT.EXE
+msDS-ToolRiskLevel: 1
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: MacrosEnabled=False
+msDS-ToolAuditRequired: FALSE
+description: Microsoft PowerPoint presentation software
+
+dn: CN=microsoft.access,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.access
+msDS-ToolIdentifier: microsoft.access
+msDS-ToolDisplayName: Microsoft Access
+msDS-ToolCategory: office
+msDS-ToolExecutable: MSACCESS.EXE
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: VBAEnabled=False
+msDS-ToolConstraints: ExternalDatabaseConnections=RequireApproval
+msDS-ToolAuditRequired: TRUE
+description: Microsoft Access database management
+
+dn: CN=microsoft.teams,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.teams
+msDS-ToolIdentifier: microsoft.teams
+msDS-ToolDisplayName: Microsoft Teams
+msDS-ToolCategory: office
+msDS-ToolExecutable: Teams.exe
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolAuditRequired: FALSE
+description: Microsoft Teams collaboration platform
+
+# ============================================================================
+# MANAGEMENT TOOLS
+# ============================================================================
+
+dn: CN=microsoft.sccm,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.sccm
+msDS-ToolIdentifier: microsoft.sccm
+msDS-ToolDisplayName: SCCM / ConfigMgr
+msDS-ToolCategory: management
+msDS-ToolExecutable: ConfigurationManager
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: DeploymentApproval=Required
+msDS-ToolConstraints: CollectionTargeting=Restricted
+msDS-ToolAuditRequired: TRUE
+description: System Center Configuration Manager
+
+dn: CN=microsoft.intune,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.intune
+msDS-ToolIdentifier: microsoft.intune
+msDS-ToolDisplayName: Microsoft Intune
+msDS-ToolCategory: management
+msDS-ToolExecutable: Microsoft.Graph.Intune
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: PolicyDeployment=RequireApproval
+msDS-ToolAuditRequired: TRUE
+description: Microsoft Intune device management
+
+dn: CN=microsoft.azuread,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.azuread
+msDS-ToolIdentifier: microsoft.azuread
+msDS-ToolDisplayName: Azure AD / Entra ID
+msDS-ToolCategory: management
+msDS-ToolExecutable: Microsoft.Graph
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: RoleAssignment=Prohibited
+msDS-ToolConstraints: ConditionalAccess=ReadOnly
+msDS-ToolAuditRequired: TRUE
+description: Azure Active Directory / Microsoft Entra ID management
+
+dn: CN=microsoft.exchange,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.exchange
+msDS-ToolIdentifier: microsoft.exchange
+msDS-ToolDisplayName: Exchange Management
+msDS-ToolCategory: management
+msDS-ToolExecutable: ExchangeOnlineManagement
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: TransportRules=Prohibited
+msDS-ToolConstraints: MailboxAccess=Restricted
+msDS-ToolAuditRequired: TRUE
+description: Exchange Server / Exchange Online management
+
+dn: CN=microsoft.aduc,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.aduc
+msDS-ToolIdentifier: microsoft.aduc
+msDS-ToolDisplayName: AD Users & Computers
+msDS-ToolCategory: management
+msDS-ToolExecutable: ActiveDirectory
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: OUScope=Restricted
+msDS-ToolConstraints: PasswordReset=RequireApproval
+msDS-ToolAuditRequired: TRUE
+description: Active Directory Users and Computers management
+
+dn: CN=microsoft.gpo,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.gpo
+msDS-ToolIdentifier: microsoft.gpo
+msDS-ToolDisplayName: Group Policy Management
+msDS-ToolCategory: management
+msDS-ToolExecutable: GroupPolicy
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 4
+msDS-ToolConstraints: GPOCreation=Prohibited
+msDS-ToolConstraints: SecuritySettings=ReadOnly
+msDS-ToolAuditRequired: TRUE
+description: Group Policy Object management
+
+dn: CN=microsoft.dns,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.dns
+msDS-ToolIdentifier: microsoft.dns
+msDS-ToolDisplayName: DNS Management
+msDS-ToolCategory: management
+msDS-ToolExecutable: DnsServer
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: ZoneModification=Restricted
+msDS-ToolAuditRequired: TRUE
+description: DNS Server management
+
+dn: CN=microsoft.dhcp,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.dhcp
+msDS-ToolIdentifier: microsoft.dhcp
+msDS-ToolDisplayName: DHCP Management
+msDS-ToolCategory: management
+msDS-ToolExecutable: DhcpServer
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: ScopeModification=Restricted
+msDS-ToolAuditRequired: TRUE
+description: DHCP Server management
+
+# ============================================================================
+# DEVELOPMENT TOOLS
+# ============================================================================
+
+dn: CN=microsoft.vscode,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.vscode
+msDS-ToolIdentifier: microsoft.vscode
+msDS-ToolDisplayName: Visual Studio Code
+msDS-ToolCategory: development
+msDS-ToolExecutable: Code.exe
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: ExtensionInstall=Restricted
+msDS-ToolAuditRequired: FALSE
+description: Visual Studio Code editor
+
+dn: CN=microsoft.visualstudio,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: microsoft.visualstudio
+msDS-ToolIdentifier: microsoft.visualstudio
+msDS-ToolDisplayName: Visual Studio
+msDS-ToolCategory: development
+msDS-ToolExecutable: devenv.exe
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolAuditRequired: FALSE
+description: Microsoft Visual Studio IDE
+
+dn: CN=git.cli,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: git.cli
+msDS-ToolIdentifier: git.cli
+msDS-ToolDisplayName: Git CLI
+msDS-ToolCategory: development
+msDS-ToolExecutable: git.exe
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: PushAccess=RequireAuthorization
+msDS-ToolAuditRequired: FALSE
+description: Git version control CLI
+
+dn: CN=docker.cli,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: docker.cli
+msDS-ToolIdentifier: docker.cli
+msDS-ToolDisplayName: Docker CLI
+msDS-ToolCategory: development
+msDS-ToolExecutable: docker.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: PrivilegedContainers=Prohibited
+msDS-ToolConstraints: HostMounts=Restricted
+msDS-ToolAuditRequired: TRUE
+description: Docker container CLI
+
+dn: CN=kubernetes.kubectl,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: kubernetes.kubectl
+msDS-ToolIdentifier: kubernetes.kubectl
+msDS-ToolDisplayName: Kubectl
+msDS-ToolCategory: development
+msDS-ToolExecutable: kubectl.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: NamespaceScope=Restricted
+msDS-ToolConstraints: SecretAccess=Prohibited
+msDS-ToolAuditRequired: TRUE
+description: Kubernetes command-line tool
+
+# ============================================================================
+# NETWORK & SECURITY TOOLS
+# ============================================================================
+
+dn: CN=network.ssh,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: network.ssh
+msDS-ToolIdentifier: network.ssh
+msDS-ToolDisplayName: SSH Client
+msDS-ToolCategory: network
+msDS-ToolExecutable: ssh.exe
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: DestinationWhitelist=Required
+msDS-ToolConstraints: KeyAuthOnly=True
+msDS-ToolConstraints: PortForwarding=Prohibited
+msDS-ToolAuditRequired: TRUE
+description: SSH secure shell client
+
+dn: CN=network.rdp,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: network.rdp
+msDS-ToolIdentifier: network.rdp
+msDS-ToolDisplayName: Remote Desktop
+msDS-ToolCategory: network
+msDS-ToolExecutable: mstsc.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: DestinationWhitelist=Required
+msDS-ToolConstraints: ClipboardEnabled=False
+msDS-ToolConstraints: DriveRedirection=Prohibited
+msDS-ToolAuditRequired: TRUE
+description: Remote Desktop Protocol client
+
+dn: CN=network.winrm,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: network.winrm
+msDS-ToolIdentifier: network.winrm
+msDS-ToolDisplayName: WinRM / PS Remoting
+msDS-ToolCategory: network
+msDS-ToolExecutable: WinRM
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: DestinationWhitelist=Required
+msDS-ToolConstraints: JEAEndpoints=Preferred
+msDS-ToolAuditRequired: TRUE
+description: Windows Remote Management / PowerShell Remoting
+
+dn: CN=security.certutil,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: security.certutil
+msDS-ToolIdentifier: security.certutil
+msDS-ToolDisplayName: Certificate Utilities
+msDS-ToolCategory: security
+msDS-ToolExecutable: certutil.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: CAOperations=Prohibited
+msDS-ToolConstraints: KeyExport=Prohibited
+msDS-ToolAuditRequired: TRUE
+description: Windows Certificate Utilities
+
+dn: CN=security.secretstore,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: security.secretstore
+msDS-ToolIdentifier: security.secretstore
+msDS-ToolDisplayName: Secret Store Access
+msDS-ToolCategory: security
+msDS-ToolExecutable: Microsoft.PowerShell.SecretManagement
+msDS-ToolRiskLevel: 5
+msDS-ToolRequiredTrustLevel: 3
+msDS-ToolConstraints: WriteAccess=RequireApproval
+msDS-ToolConstraints: SecretScope=Restricted
+msDS-ToolAuditRequired: TRUE
+description: Secret Management vault access
+
+# ============================================================================
+# FILE SYSTEM & DATA
+# ============================================================================
+
+dn: CN=filesystem.read,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: filesystem.read
+msDS-ToolIdentifier: filesystem.read
+msDS-ToolDisplayName: File System Read
+msDS-ToolCategory: filesystem
+msDS-ToolRiskLevel: 1
+msDS-ToolRequiredTrustLevel: 0
+msDS-ToolConstraints: PathWhitelist=Configurable
+msDS-ToolConstraints: SensitiveDirectories=Excluded
+msDS-ToolAuditRequired: FALSE
+description: File system read access capability
+
+dn: CN=filesystem.write,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: filesystem.write
+msDS-ToolIdentifier: filesystem.write
+msDS-ToolDisplayName: File System Write
+msDS-ToolCategory: filesystem
+msDS-ToolRiskLevel: 3
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: PathWhitelist=Required
+msDS-ToolConstraints: ExecutableCreation=Prohibited
+msDS-ToolConstraints: SystemDirectories=Excluded
+msDS-ToolAuditRequired: TRUE
+description: File system write access capability
+
+dn: CN=filesystem.delete,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: filesystem.delete
+msDS-ToolIdentifier: filesystem.delete
+msDS-ToolDisplayName: File System Delete
+msDS-ToolCategory: filesystem
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: PathWhitelist=Required
+msDS-ToolConstraints: RecursiveDelete=RequireApproval
+msDS-ToolConstraints: SystemDirectories=Excluded
+msDS-ToolAuditRequired: TRUE
+description: File system delete access capability
+
+dn: CN=database.sql,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: database.sql
+msDS-ToolIdentifier: database.sql
+msDS-ToolDisplayName: SQL Query Execution
+msDS-ToolCategory: data
+msDS-ToolExecutable: sqlcmd.exe
+msDS-ToolRiskLevel: 4
+msDS-ToolRequiredTrustLevel: 2
+msDS-ToolConstraints: ConnectionStringWhitelist=Required
+msDS-ToolConstraints: DDLOperations=Prohibited
+msDS-ToolConstraints: QueryTimeout=30
+msDS-ToolConstraints: RowLimit=10000
+msDS-ToolAuditRequired: TRUE
+description: SQL database query execution
+
+dn: CN=api.http,CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentTool
+cn: api.http
+msDS-ToolIdentifier: api.http
+msDS-ToolDisplayName: HTTP/REST API Calls
+msDS-ToolCategory: network
+msDS-ToolExecutable: Invoke-RestMethod
+msDS-ToolRiskLevel: 2
+msDS-ToolRequiredTrustLevel: 1
+msDS-ToolConstraints: DestinationWhitelist=Configurable
+msDS-ToolConstraints: InternalAPIsOnly=Default
+msDS-ToolConstraints: RateLimit=100/minute
+msDS-ToolAuditRequired: FALSE
+description: HTTP and REST API call capability

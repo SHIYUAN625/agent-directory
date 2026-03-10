@@ -1,0 +1,64 @@
+# Agent Directory Schema Extension - Agent Object Class
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.1
+#
+# This file defines the msDS-Agent structural class.
+# Prerequisites: 01-agent-attributes.ldif must be loaded first.
+
+# ============================================================================
+# msDS-Agent Object Class
+#
+# Inherits from: user
+#
+# Inheritance chain: top → person → organizationalPerson → user → msDS-Agent
+#
+# This provides:
+#   - unicodePwd for password-based authentication
+#   - servicePrincipalName for Kerberos
+#   - objectSid/sAMAccountName for security principal
+#   - altSecurityIdentities for certificate mapping
+#   - userAccountControl for account state
+#
+# Agents are identity principals (who). Execution environments (where) are
+# represented by msDS-AgentSandbox objects which inherit from computer.
+# ============================================================================
+
+dn: CN=msDS-Agent,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: classSchema
+cn: msDS-Agent
+lDAPDisplayName: msDS-Agent
+adminDisplayName: Agent
+adminDescription: AI/ML Agent identity principal with authentication and tool authorization
+governsId: 1.3.6.1.4.1.99999.1.1
+objectClassCategory: 3
+subClassOf: top
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+#
+# mayContain: Optional attributes specific to agents
+#
+mayContain: msDS-AgentType
+mayContain: msDS-AgentCapabilities
+mayContain: msDS-AgentOwner
+mayContain: msDS-AgentParent
+mayContain: msDS-AgentTrustLevel
+mayContain: msDS-AgentModel
+mayContain: msDS-AgentPolicies
+mayContain: msDS-AgentDelegationScope
+mayContain: msDS-AgentAuditLevel
+mayContain: msDS-AgentAuthorizedTools
+mayContain: msDS-AgentDeniedTools
+mayContain: msDS-AgentSandbox
+mayContain: msDS-AgentInstructionGPOs
+#
+# possSuperiors: Containers where agents can be created
+#
+possSuperiors: organizationalUnit
+possSuperiors: container
+possSuperiors: domainDNS

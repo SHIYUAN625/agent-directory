@@ -1,0 +1,87 @@
+# Autonomous Enterprise AD Schema Extension - Agent Object Class (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.1
+#
+# This file defines the x-agent auxiliary class.
+# Prerequisites: 01-agent-attributes.ldif must be loaded first.
+
+# ============================================================================
+# x-agent Object Class (AUXILIARY)
+#
+# Applied to: user objects (created via samba-tool user create)
+#
+# This is an auxiliary class, meaning it can be added to existing user
+# objects after creation. The base user class provides:
+#   - unicodePwd for password-based authentication
+#   - servicePrincipalName for Kerberos SPNs
+#   - objectSid/sAMAccountName for security principal
+#   - altSecurityIdentities for certificate mapping
+#   - userAccountControl for account state
+#
+# x-agent adds agent-specific attributes for type, trust, tools, policies,
+# messaging, LLM access, and instruction GPO linkage.
+#
+# Note: Samba4 does not support gMSA (msDS-ManagedPassword*).
+# Password/keytab rotation is handled by the provisioning service.
+# ============================================================================
+
+dn: CN=x-agent,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: classSchema
+cn: x-agent
+lDAPDisplayName: x-agent
+adminDisplayName: Agent
+adminDescription: AI/ML Agent auxiliary class — adds agent attributes to user objects
+governsId: 1.3.6.1.4.1.99999.1.1
+objectClassCategory: 3
+subClassOf: top
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+#
+# mayContain: Optional attributes specific to agents
+#
+# Identity & Classification
+mayContain: x-agent-Type
+mayContain: x-agent-TrustLevel
+mayContain: x-agent-Owner
+mayContain: x-agent-Parent
+mayContain: x-agent-Model
+#
+# Capabilities & Tools
+mayContain: x-agent-Capabilities
+mayContain: x-agent-AuthorizedTools
+mayContain: x-agent-DeniedTools
+mayContain: x-agent-DelegationScope
+#
+# Runtime & Messaging
+mayContain: x-agent-NatsSubjects
+mayContain: x-agent-EscalationPath
+#
+# Policy & Audit
+mayContain: x-agent-Policies
+mayContain: x-agent-AuditLevel
+#
+# LLM & External Services
+mayContain: x-agent-LLMAccess
+mayContain: x-agent-LLMQuota
+mayContain: x-agent-GitHubRepos
+mayContain: x-agent-GitHubPermissions
+#
+# Mission & State
+mayContain: x-agent-Mission
+mayContain: x-agent-StateEndpoint
+#
+# Sandbox linkage
+mayContain: x-agent-Sandbox
+#
+# Instruction GPO linkage (defined in 01c-instruction-gpo-attributes.ldif)
+mayContain: x-agent-InstructionGPOs
+# Note: possSuperiors not needed for auxiliary classes — the base user class
+# determines valid containers. Agents are created as users then moved to
+# CN=Agents,CN=System.
+

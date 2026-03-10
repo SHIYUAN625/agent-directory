@@ -1,0 +1,124 @@
+# Agent Directory Schema Extension - Sandbox Attributes
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.30-.2.35
+#
+# This file defines custom attributes for the msDS-AgentSandbox object class.
+# Sandboxes are execution environments where agents run.
+
+# ============================================================================
+# msDS-SandboxEndpoint
+# URI where the sandbox runtime is accessible
+# ============================================================================
+dn: CN=msDS-SandboxEndpoint,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxEndpoint
+lDAPDisplayName: msDS-SandboxEndpoint
+adminDisplayName: Sandbox Endpoint
+adminDescription: URI endpoint where the sandbox runtime is accessible
+attributeId: 1.3.6.1.4.1.99999.2.30
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-SandboxAgents
+# Distinguished names of agents that can run in this sandbox
+# ============================================================================
+dn: CN=msDS-SandboxAgents,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxAgents
+lDAPDisplayName: msDS-SandboxAgents
+adminDisplayName: Sandbox Agents
+adminDescription: Distinguished names of agents authorized to run in this sandbox
+attributeId: 1.3.6.1.4.1.99999.2.31
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-SandboxResourcePolicy
+# JSON-encoded resource constraints (CPU, memory, disk limits)
+# ============================================================================
+dn: CN=msDS-SandboxResourcePolicy,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxResourcePolicy
+lDAPDisplayName: msDS-SandboxResourcePolicy
+adminDisplayName: Sandbox Resource Policy
+adminDescription: JSON-encoded resource constraints for the sandbox (CPU, memory, disk)
+attributeId: 1.3.6.1.4.1.99999.2.32
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-SandboxNetworkPolicy
+# JSON-encoded network rules (allowed hosts, ports, protocols)
+# ============================================================================
+dn: CN=msDS-SandboxNetworkPolicy,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxNetworkPolicy
+lDAPDisplayName: msDS-SandboxNetworkPolicy
+adminDisplayName: Sandbox Network Policy
+adminDescription: JSON-encoded network rules for the sandbox (allowed hosts, ports, protocols)
+attributeId: 1.3.6.1.4.1.99999.2.33
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-SandboxSecurityProfile
+# Sandbox isolation technology (bwrap, appcontainer, hyperv, etc.)
+# ============================================================================
+dn: CN=msDS-SandboxSecurityProfile,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxSecurityProfile
+lDAPDisplayName: msDS-SandboxSecurityProfile
+adminDisplayName: Sandbox Security Profile
+adminDescription: Sandbox isolation technology (bwrap, appcontainer, hyperv, vmware, none)
+attributeId: 1.3.6.1.4.1.99999.2.34
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-SandboxStatus
+# Current sandbox lifecycle status
+# ============================================================================
+dn: CN=msDS-SandboxStatus,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-SandboxStatus
+lDAPDisplayName: msDS-SandboxStatus
+adminDisplayName: Sandbox Status
+adminDescription: Current sandbox lifecycle status (active, standby, terminated)
+attributeId: 1.3.6.1.4.1.99999.2.35
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE

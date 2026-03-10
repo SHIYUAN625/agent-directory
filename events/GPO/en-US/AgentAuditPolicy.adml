@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Agent Directory Group Policy Language File (English)
+
+    This ADML file provides display strings for the Agent Directory
+    Group Policy administrative template.
+-->
+<policyDefinitionResources
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    revision="1.0"
+    schemaVersion="1.0"
+    xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+
+    <displayName>Agent Directory</displayName>
+    <description>Group Policy settings for Agent Directory</description>
+
+    <resources>
+        <stringTable>
+            <!-- Supported On -->
+            <string id="SUPPORTED_WindowsServer2016">Windows Server 2016 or later</string>
+
+            <!-- Categories -->
+            <string id="AgentDirectory">Agent Directory</string>
+            <string id="AgentDirectory_Help">Configure settings for Agent Directory, including audit policies, event logging, and security controls for AI agents.</string>
+
+            <string id="AgentAudit">Audit Settings</string>
+            <string id="AgentAudit_Help">Configure audit levels and what agent activities are logged.</string>
+
+            <string id="EventLog">Event Log</string>
+            <string id="EventLog_Help">Configure Agent Directory event log settings including size and retention.</string>
+
+            <string id="Security">Security</string>
+            <string id="Security_Help">Configure security controls for agent operations.</string>
+
+            <!-- Default Audit Level -->
+            <string id="DefaultAuditLevel">Default Audit Level</string>
+            <string id="DefaultAuditLevel_Help">Specifies the default audit level for agents that don't have an explicit audit level set.
+
+Minimal (0): Log errors and critical events only
+Standard (1): Log authentication, authorization, and significant operations
+Detailed (2): Log all operations including resource access
+Debug (3): Full diagnostic logging (not recommended for production)
+
+If this policy is not configured, agents use their individually configured audit level, or Standard (1) if not set.</string>
+
+            <string id="AuditLevel_Minimal">Minimal - Errors only</string>
+            <string id="AuditLevel_Standard">Standard - Auth and authorization</string>
+            <string id="AuditLevel_Detailed">Detailed - All operations</string>
+            <string id="AuditLevel_Debug">Debug - Full trace</string>
+
+            <!-- Audit Tool Execution -->
+            <string id="AuditToolExecution">Audit Tool Execution</string>
+            <string id="AuditToolExecution_Help">When enabled, logs all tool execution events including the tool used, target resources, and command lines (if AuditCommandLines is also enabled).
+
+This setting applies to all agents regardless of their individual audit level.
+
+If you enable this policy, tool execution events (4000-4099) are always logged.
+
+If you disable this policy, tool execution events are only logged based on the agent's audit level.
+
+If you do not configure this policy, tool execution events are logged based on the tool's AuditRequired setting.</string>
+
+            <!-- Audit Delegation -->
+            <string id="AuditDelegation">Audit Delegation</string>
+            <string id="AuditDelegation_Help">When enabled, logs all delegation events including when agents act on behalf of users.
+
+This is critical for compliance and security monitoring.
+
+If you enable this policy, delegation events (5000-5099) are always logged.
+
+If you disable this policy, delegation events are only logged based on the agent's audit level.
+
+If you do not configure this policy, delegation events are logged at Standard audit level and above.</string>
+
+            <!-- Audit Resource Access -->
+            <string id="AuditResourceAccess">Audit Resource Access</string>
+            <string id="AuditResourceAccess_Help">When enabled, logs file, network, and service access by agents.
+
+This can generate significant log volume and should be used carefully in production.
+
+If you enable this policy, resource access events (8000-8099) are always logged.
+
+If you disable this policy, resource access events are only logged based on the agent's audit level.
+
+If you do not configure this policy, resource access events are logged at Detailed audit level and above.</string>
+
+            <!-- Audit Command Lines -->
+            <string id="AuditCommandLines">Audit Command Lines</string>
+            <string id="AuditCommandLines_Help">When enabled, includes the full command line in tool execution events.
+
+WARNING: Command lines may contain sensitive information such as passwords or tokens. Ensure your event log storage is appropriately secured.
+
+If you enable this policy, command lines are included in Event ID 4020 (ToolCommandExecuted).
+
+If you disable or do not configure this policy, command lines are not logged.</string>
+
+            <!-- Event Log Max Size - Operational -->
+            <string id="OperationalLogMaxSize">Operational Log Maximum Size</string>
+            <string id="OperationalLogMaxSize_Help">Specifies the maximum size in megabytes for the Microsoft-AgentDirectory/Operational event log.
+
+The operational log contains normal agent activity events.
+
+Default: 100 MB
+Minimum: 10 MB
+Maximum: 10240 MB (10 GB)
+
+If you do not configure this policy, the default of 100 MB is used.</string>
+
+            <!-- Event Log Max Size - Admin -->
+            <string id="AdminLogMaxSize">Admin Log Maximum Size</string>
+            <string id="AdminLogMaxSize_Help">Specifies the maximum size in megabytes for the Microsoft-AgentDirectory/Admin event log.
+
+The admin log contains warnings, errors, and security events.
+
+Default: 100 MB
+Minimum: 10 MB
+Maximum: 10240 MB (10 GB)
+
+If you do not configure this policy, the default of 100 MB is used.</string>
+
+            <!-- Event Retention -->
+            <string id="EventRetention">Event Retention Policy</string>
+            <string id="EventRetention_Help">Specifies what happens when the event log reaches maximum size.
+
+Overwrite events as needed: Oldest events are deleted to make room for new events.
+
+Archive log when full: Log is archived and a new log is started.
+
+Do not overwrite: New events are not logged when the log is full. Manual clearing is required.
+
+If you do not configure this policy, "Overwrite events as needed" is used.</string>
+
+            <string id="Retention_Overwrite">Overwrite events as needed</string>
+            <string id="Retention_Archive">Archive log when full</string>
+            <string id="Retention_DoNotOverwrite">Do not overwrite events</string>
+
+            <!-- Enable Debug Log -->
+            <string id="EnableDebugLog">Enable Debug Log</string>
+            <string id="EnableDebugLog_Help">When enabled, activates the Microsoft-AgentDirectory/Debug event log channel.
+
+The debug log contains verbose diagnostic information and is intended for troubleshooting only. It can generate very high log volume.
+
+WARNING: The debug log may contain sensitive information. Only enable temporarily for troubleshooting.
+
+If you enable this policy, the debug log channel is enabled.
+
+If you disable or do not configure this policy, the debug log channel is disabled.</string>
+
+            <!-- Require Tool Audit -->
+            <string id="RequireToolAudit">Require Audit for All Tools</string>
+            <string id="RequireToolAudit_Help">When enabled, all tool executions are audited regardless of the tool's AuditRequired setting.
+
+This provides comprehensive tool usage tracking but increases log volume.
+
+If you enable this policy, all tool executions generate audit events.
+
+If you disable this policy, only tools with AuditRequired=TRUE generate audit events.
+
+If you do not configure this policy, tool audit is based on each tool's AuditRequired setting.</string>
+
+            <!-- Max Trust Level -->
+            <string id="MaxTrustLevel">Maximum Allowed Trust Level</string>
+            <string id="MaxTrustLevel_Help">Specifies the maximum trust level that can be assigned to agents in this scope.
+
+This can be used to limit agent capabilities in specific OUs or domains.
+
+Trust Levels:
+0 - Untrusted: No delegation, heavily restricted
+1 - Basic: Limited read/write, no delegation
+2 - Standard: Normal operations, constrained delegation
+3 - Elevated: Broad access, protocol transition allowed
+4 - System: Full trust, equivalent to service account
+
+If you enable this policy, agents cannot be assigned a trust level higher than specified.
+
+If you do not configure this policy, trust level is not restricted by policy.</string>
+
+            <string id="TrustLevel_Untrusted">0 - Untrusted</string>
+            <string id="TrustLevel_Basic">1 - Basic</string>
+            <string id="TrustLevel_Standard">2 - Standard</string>
+            <string id="TrustLevel_Elevated">3 - Elevated</string>
+            <string id="TrustLevel_System">4 - System</string>
+
+            <!-- Block Unauthorized Tools -->
+            <string id="BlockUnauthorizedTools">Block Unauthorized Tool Access</string>
+            <string id="BlockUnauthorizedTools_Help">When enabled, agents are blocked from using tools they are not explicitly authorized for.
+
+If you enable this policy, agents can only use tools that are:
+- Directly assigned via msDS-AgentAuthorizedTools
+- Granted via group membership
+- NOT in msDS-AgentDeniedTools
+
+Implicit tool access based on trust level alone is not allowed.
+
+If you disable or do not configure this policy, agents may use tools based on trust level comparison with tool requirements.</string>
+
+            <!-- Alert on Policy Violation -->
+            <string id="AlertOnPolicyViolation">Generate Alerts on Policy Violations</string>
+            <string id="AlertOnPolicyViolation_Help">When enabled, critical policy violations trigger immediate alerts in addition to event logging.
+
+Alerts can be configured to:
+- Send email notifications
+- Trigger SIEM alerts
+- Invoke webhook callbacks
+
+Configure alert destinations in the Agent Directory management console.
+
+If you enable this policy, alerts are generated for policy violation events 6001 and above.
+
+If you disable or do not configure this policy, only standard event logging occurs.</string>
+
+            <!-- Sandbox Audit Category -->
+            <string id="Cat_SandboxAudit">Sandbox Audit</string>
+            <string id="Cat_InstructionGPO">Instruction GPO</string>
+
+            <!-- Sandbox Audit Policies -->
+            <string id="Pol_AuditSandboxLifecycle">Audit Sandbox Lifecycle Events</string>
+            <string id="Pol_AuditSandboxLifecycle_Help">Enables auditing of sandbox creation, modification, deletion, activation, and deactivation events.</string>
+
+            <string id="Pol_SandboxIsolationMinimum">Minimum Sandbox Isolation Profile</string>
+            <string id="Pol_SandboxIsolationMinimum_Help">Sets the minimum required isolation profile for agent sandboxes.
+
+None: No isolation requirement
+bwrap: Bubblewrap namespace isolation
+AppContainer: Windows AppContainer isolation
+Hyper-V: Full Hyper-V virtual machine isolation</string>
+
+            <string id="SandboxIsolation_None">None</string>
+            <string id="SandboxIsolation_Bwrap">Bubblewrap (bwrap)</string>
+            <string id="SandboxIsolation_AppContainer">AppContainer</string>
+            <string id="SandboxIsolation_HyperV">Hyper-V</string>
+
+            <!-- Instruction GPO Policies -->
+            <string id="Pol_AuditInstructionGPO">Audit Instruction GPO Events</string>
+            <string id="Pol_AuditInstructionGPO_Help">Enables auditing of instruction GPO application, linking, and modification events.</string>
+
+            <string id="Pol_RequireGPOIntegrityCheck">Require GPO Content Integrity Check</string>
+            <string id="Pol_RequireGPOIntegrityCheck_Help">When enabled, instruction GPO content must pass integrity verification before being applied to agents. This prevents tampered or corrupted instructions from being delivered.</string>
+        </stringTable>
+
+        <presentationTable>
+            <!-- Default Audit Level Presentation -->
+            <presentation id="DefaultAuditLevel">
+                <dropdownList refId="AuditLevel" defaultItem="1">Select audit level:</dropdownList>
+            </presentation>
+
+            <!-- Operational Log Max Size Presentation -->
+            <presentation id="OperationalLogMaxSize">
+                <decimalTextBox refId="MaxSizeMB" defaultValue="100">Maximum size (MB):</decimalTextBox>
+            </presentation>
+
+            <!-- Admin Log Max Size Presentation -->
+            <presentation id="AdminLogMaxSize">
+                <decimalTextBox refId="MaxSizeMB" defaultValue="100">Maximum size (MB):</decimalTextBox>
+            </presentation>
+
+            <!-- Event Retention Presentation -->
+            <presentation id="EventRetention">
+                <dropdownList refId="RetentionPolicy" defaultItem="0">Retention policy:</dropdownList>
+            </presentation>
+
+            <!-- Max Trust Level Presentation -->
+            <presentation id="MaxTrustLevel">
+                <dropdownList refId="TrustLevel" defaultItem="4">Maximum trust level:</dropdownList>
+            </presentation>
+
+            <!-- Sandbox Isolation Minimum Presentation -->
+            <presentation id="SandboxIsolationMinimum">
+                <dropdownList refId="SandboxIsolationLevel" defaultItem="0">Minimum isolation profile:</dropdownList>
+            </presentation>
+        </presentationTable>
+    </resources>
+</policyDefinitionResources>

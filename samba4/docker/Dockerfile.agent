@@ -1,0 +1,56 @@
+# Agent Runner — runs psh-agent with AD identity
+#
+# Build context: ~/projects/ (parent of both agent-directory and psh-agent)
+# Contains: PowerShell 7, ldap-utils, krb5-user, psh-agent module, broker, launchers
+
+FROM mcr.microsoft.com/powershell:7.4-ubuntu-22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ldap-utils \
+    libsasl2-modules-gssapi-mit \
+    smbclient \
+    krb5-user \
+    curl \
+    git \
+    python3 \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy psh-agent module
+COPY psh-agent/PshAgent /opt/psh-agent/PshAgent
+
+# Copy enterprise Python package (config assembler, provisioner, etc.)
+COPY agent-directory/enterprise /opt/enterprise/enterprise
+ENV PYTHONPATH=/opt/enterprise
+
+# Copy launchers and config
+COPY agent-directory/samba4/docker/Start-AgentFromAD.ps1 /opt/agent-launcher/Start-AgentFromAD.ps1
+COPY agent-directory/samba4/docker/Start-AgentFromConfig.ps1 /opt/agent-launcher/Start-AgentFromConfig.ps1
+COPY agent-directory/samba4/docker/agent-broker.py /opt/agent-launcher/agent-broker.py
+COPY agent-directory/samba4/docker/tool-mapping.json /opt/agent-launcher/tool-mapping.json
+
+# Kerberos config — KDC is the DC container (dc1)
+RUN printf '[libdefaults]\n\
+    default_realm = AUTONOMY.LOCAL\n\
+    dns_lookup_realm = false\n\
+    dns_lookup_kdc = false\n\
+    rdns = false\n\
+\n\
+[realms]\n\
+    AUTONOMY.LOCAL = {\n\
+        kdc = dc1\n\
+        admin_server = dc1\n\
+    }\n\
+\n\
+[domain_realm]\n\
+    .autonomy.local = AUTONOMY.LOCAL\n\
+    autonomy.local = AUTONOMY.LOCAL\n' > /etc/krb5.conf
+
+# Runtime directories
+RUN mkdir -p /workspace /run/agent-config
+
+WORKDIR /workspace
+
+ENTRYPOINT ["pwsh", "-NoLogo"]

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "trust-elevated",
+  "description": "Expanded permissions for elevated trust agents (level 3-4)",
+  "settings": {
+    "tools": {
+      "allow": [
+        "gnu.bash",
+        "docker.cli",
+        "kubernetes.kubectl",
+        "network.ssh",
+        "security.gpg",
+        "security.openssl",
+        "database.postgresql",
+        "database.redis",
+        "ldap.search"
+      ]
+    },
+    "credentials": {
+      "allow_keytab_access": false,
+      "credential_broker_required": true,
+      "allow_credential_delegation": true,
+      "max_credential_lifetime_seconds": 7200
+    },
+    "sandbox": {
+      "bwrap_required": true,
+      "network_namespace": "host_filtered"
+    },
+    "compute": {
+      "max_memory_mb": 16384,
+      "max_runtime_seconds": 14400,
+      "max_disk_mb": 4096
+    },
+    "llm": {
+      "daily_token_limit": 10000000,
+      "max_context_tokens": 200000
+    },
+    "network": {
+      "allow_intranet": true,
+      "whitelist": [
+        "*.autonomy.local",
+        "github.com",
+        "api.github.com"
+      ]
+    },
+    "agents": {
+      "max_spawned_agents": 20,
+      "max_delegated_tasks": 100,
+      "can_manage_agents": true
+    }
+  }
+}

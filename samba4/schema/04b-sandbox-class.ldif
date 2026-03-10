@@ -1,0 +1,55 @@
+# Autonomous Enterprise AD Schema Extension - Sandbox Object Class (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.4
+#
+# This file defines the x-agentSandbox auxiliary class.
+# Prerequisites: 01b-sandbox-attributes.ldif must be loaded first.
+
+# ============================================================================
+# x-agentSandbox Object Class (AUXILIARY)
+#
+# Applied to: computer objects (created via samba-tool computer create)
+#
+# This is an auxiliary class, meaning it can be added to existing computer
+# objects after creation. The base computer class provides:
+#   - dNSHostName for network identity
+#   - servicePrincipalName for Kerberos
+#   - objectSid/sAMAccountName for security principal
+#   - msDS-AllowedToDelegateTo for RBCD (resource receives delegation)
+#   - userAccountControl for account state
+#
+# x-agentSandbox adds sandbox-specific attributes for security profile,
+# resource/network policies, and agent linkage.
+#
+# Note: Samba4 does not support gMSA (msDS-ManagedPassword*).
+# ============================================================================
+
+dn: CN=x-agentSandbox,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: classSchema
+cn: x-agentSandbox
+lDAPDisplayName: x-agentSandbox
+adminDisplayName: Agent Sandbox
+adminDescription: Sandbox auxiliary class — adds sandbox attributes to computer objects
+governsId: 1.3.6.1.4.1.99999.1.4
+objectClassCategory: 3
+subClassOf: top
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+#
+# mayContain: Optional attributes specific to sandboxes
+#
+mayContain: x-sandbox-Endpoint
+mayContain: x-sandbox-Agents
+mayContain: x-sandbox-ResourcePolicy
+mayContain: x-sandbox-NetworkPolicy
+mayContain: x-sandbox-SecurityProfile
+mayContain: x-sandbox-Status
+# Note: possSuperiors not needed for auxiliary classes — the base computer class
+# determines valid containers. Sandboxes are created as computers then moved to
+# CN=Agent Sandboxes,CN=System.

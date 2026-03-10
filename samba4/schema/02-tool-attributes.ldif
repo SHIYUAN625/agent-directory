@@ -1,0 +1,182 @@
+# Autonomous Enterprise AD Schema Extension - Tool Attributes (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Tool Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.3x
+#
+# This file defines custom attributes for the x-agentTool object class.
+
+# ============================================================================
+# TOOL IDENTITY
+# ============================================================================
+
+# x-tool-Identifier
+# Canonical tool ID (e.g., gnu.bash, python.interpreter)
+dn: CN=x-tool-Identifier,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Identifier
+lDAPDisplayName: x-tool-Identifier
+adminDisplayName: Tool Identifier
+adminDescription: Canonical identifier for the tool (e.g., gnu.bash)
+attributeId: 1.3.6.1.4.1.99999.2.30
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-tool-DisplayName
+# Human-readable display name for the tool
+dn: CN=x-tool-DisplayName,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-DisplayName
+lDAPDisplayName: x-tool-DisplayName
+adminDisplayName: Tool Display Name
+adminDescription: Human-readable name for the tool
+attributeId: 1.3.6.1.4.1.99999.2.31
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-tool-Category
+# Tool category: shell, office, management, development, network, security, filesystem, data
+dn: CN=x-tool-Category,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Category
+lDAPDisplayName: x-tool-Category
+adminDisplayName: Tool Category
+adminDescription: Category classification for the tool (shell, office, management, etc.)
+attributeId: 1.3.6.1.4.1.99999.2.32
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# ============================================================================
+# TOOL RISK & ACCESS CONTROL
+# ============================================================================
+
+# x-tool-RiskLevel
+# Risk classification from 1 (Minimal) to 5 (Critical)
+# 1 = Minimal: Safe operations, no system impact
+# 2 = Low: Limited impact, easily reversible
+# 3 = Medium: Moderate impact, requires caution
+# 4 = High: Significant impact, potential for damage
+# 5 = Critical: System-wide impact, requires approval
+dn: CN=x-tool-RiskLevel,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-RiskLevel
+lDAPDisplayName: x-tool-RiskLevel
+adminDisplayName: Tool Risk Level
+adminDescription: Risk classification for the tool (1=Minimal to 5=Critical)
+attributeId: 1.3.6.1.4.1.99999.2.33
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 1
+rangeUpper: 5
+
+# x-tool-RequiredTrust
+# Minimum agent trust level required to use this tool
+dn: CN=x-tool-RequiredTrust,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-RequiredTrust
+lDAPDisplayName: x-tool-RequiredTrust
+adminDisplayName: Tool Required Trust Level
+adminDescription: Minimum agent trust level required to use this tool (0-4)
+attributeId: 1.3.6.1.4.1.99999.2.34
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 4
+
+# x-tool-Constraints
+# Multi-valued key=value usage restrictions
+# Examples: max_runtime=300, network_access=false, sandbox_required=true
+dn: CN=x-tool-Constraints,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Constraints
+lDAPDisplayName: x-tool-Constraints
+adminDisplayName: Tool Constraints
+adminDescription: Usage restrictions and policies applied when using this tool (key=value)
+attributeId: 1.3.6.1.4.1.99999.2.35
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+
+# x-tool-AuditRequired
+# Whether usage of this tool must be audited
+dn: CN=x-tool-AuditRequired,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-AuditRequired
+lDAPDisplayName: x-tool-AuditRequired
+adminDisplayName: Tool Audit Required
+adminDescription: Whether usage of this tool must be audited
+attributeId: 1.3.6.1.4.1.99999.2.36
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+
+# ============================================================================
+# TOOL EXECUTION
+# ============================================================================
+
+# x-tool-Executable
+# Path or command to execute the tool
+dn: CN=x-tool-Executable,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Executable
+lDAPDisplayName: x-tool-Executable
+adminDisplayName: Tool Executable
+adminDescription: Path or identifier for the tool executable
+attributeId: 1.3.6.1.4.1.99999.2.37
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-tool-Version
+# Minimum required version of the tool
+dn: CN=x-tool-Version,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Version
+lDAPDisplayName: x-tool-Version
+adminDisplayName: Tool Version
+adminDescription: Minimum required version of the tool
+attributeId: 1.3.6.1.4.1.99999.2.38
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-tool-Schema
+# JSON Schema for tool input/output validation
+dn: CN=x-tool-Schema,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-tool-Schema
+lDAPDisplayName: x-tool-Schema
+adminDisplayName: Tool Schema
+adminDescription: JSON Schema for tool input/output validation
+attributeId: 1.3.6.1.4.1.99999.2.39
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+

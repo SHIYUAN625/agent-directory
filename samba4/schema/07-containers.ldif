@@ -1,0 +1,144 @@
+# Autonomous Enterprise AD Schema Extension - Container Objects (Samba4)
+#
+# This file creates the standard containers for storing Agent, Tool, and Policy objects.
+# These containers are created in CN=System which is the standard location for
+# infrastructure objects in Active Directory.
+#
+# Prerequisites: Schema classes must be loaded first.
+#
+# IMPORTANT: Replace DC=autonomy,DC=local with your actual domain components
+
+# ============================================================================
+# CN=Agents Container
+#
+# Default container for storing agent identity objects.
+# Structure:
+#   CN=Agents,CN=System
+#   +-- CN=coordinator-main
+#   +-- CN=worker-pool-001
+#   +-- OU=Teams
+#       +-- CN=engineering-lead
+# ============================================================================
+
+dn: CN=Agents,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: container
+cn: Agents
+description: Container for AI Agent identity objects
+
+# ============================================================================
+# CN=Agent Tools Container
+#
+# Container for storing registered tool definitions.
+# Tools defined here can be granted to agents for authorization.
+# ============================================================================
+
+dn: CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: container
+cn: Agent Tools
+description: Container for Agent Tool definitions and registry
+
+# ============================================================================
+# CN=Agent Sandboxes Container
+#
+# Container for storing sandbox execution environment objects.
+# Sandboxes defined here represent where agents run.
+# ============================================================================
+
+dn: CN=Agent Sandboxes,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: container
+cn: Agent Sandboxes
+description: Container for Agent Sandbox execution environment objects
+
+# ============================================================================
+# CN=Agent Policies Container
+#
+# Container for storing policy objects.
+# Policy content (JSON) is stored in SYSVOL, metadata here.
+# ============================================================================
+
+dn: CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: container
+cn: Agent Policies
+description: Container for Agent Policy objects
+
+# ============================================================================
+# CN=Agent Instructions Container
+#
+# Container for storing instruction GPO objects.
+# Instruction content (markdown) is stored in SYSVOL at
+# AgentInstructions/{gpo-name}/instructions.md
+# ============================================================================
+
+dn: CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: container
+cn: Agent Instructions
+description: Container for Agent Instruction GPO objects
+
+# ============================================================================
+# OU=AgentGroups - Organizational Unit for Capability Groups
+#
+# Groups for organizing agents by capability and access level.
+# ============================================================================
+
+dn: OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: organizationalUnit
+ou: AgentGroups
+description: Organizational unit for agent capability groups
+
+# Tier groups (by trust level and capabilities)
+dn: CN=Tier1-Workers,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: Tier1-Workers
+description: Tier 1 worker agents with basic capabilities
+groupType: -2147483646
+
+dn: CN=Tier2-Specialists,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: Tier2-Specialists
+description: Tier 2 specialist agents with standard capabilities
+groupType: -2147483646
+
+dn: CN=Tier3-Coordinators,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: Tier3-Coordinators
+description: Tier 3 coordinator agents with elevated capabilities
+groupType: -2147483646
+
+# Tool access groups
+dn: CN=ToolAccess-Shell,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: ToolAccess-Shell
+description: Agents authorized to use shell tools
+groupType: -2147483646
+
+dn: CN=ToolAccess-Network,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: ToolAccess-Network
+description: Agents authorized to use network tools
+groupType: -2147483646
+
+dn: CN=ToolAccess-Development,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: ToolAccess-Development
+description: Agents authorized to use development tools
+groupType: -2147483646
+
+dn: CN=ToolAccess-Management,OU=AgentGroups,DC=autonomy,DC=local
+changetype: add
+objectClass: group
+cn: ToolAccess-Management
+description: Agents authorized to use management tools
+groupType: -2147483646
+

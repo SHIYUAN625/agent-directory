@@ -1,0 +1,42 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "base-security",
+  "description": "Base security policy applied to all agents",
+  "settings": {
+    "tools": {
+      "allow": [],
+      "deny": [
+        "samba.tool",
+        "ldap.modify"
+      ],
+      "require_audit_for_risk_above": 3
+    },
+    "credentials": {
+      "allow_keytab_access": false,
+      "credential_broker_required": true,
+      "max_credential_lifetime_seconds": 3600,
+      "allow_credential_delegation": false
+    },
+    "sandbox": {
+      "bwrap_required": true,
+      "seccomp_profile": "default",
+      "network_namespace": "isolated",
+      "user_namespace": true,
+      "no_new_privileges": true
+    },
+    "audit": {
+      "log_all_tool_calls": true,
+      "log_network_requests": true,
+      "log_file_access": true,
+      "log_credential_requests": true,
+      "anomaly_detection": true
+    },
+    "runtime": {
+      "max_concurrent_tools": 5,
+      "tool_timeout_seconds": 300,
+      "allow_child_processes": true,
+      "max_child_processes": 10
+    }
+  }
+}

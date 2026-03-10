@@ -1,0 +1,171 @@
+# Autonomous Enterprise AD Schema Extension - Default Policy Definitions (Samba4)
+#
+# This file creates pre-defined policy objects for agent governance.
+# Policy content (JSON) is stored in SYSVOL at AgentPolicies/{policy-name}/policy.json
+#
+# Prerequisites:
+#   - Policy class (06-policy-class.ldif) must be loaded
+#   - Agent Policies container (07-containers.ldif) must be created
+#
+# IMPORTANT: Replace DC=autonomy,DC=local with your actual domain components
+
+# ============================================================================
+# BASE POLICIES (Priority 0-99)
+# Apply to all agents unless explicitly excluded
+# ============================================================================
+
+dn: CN=base-security,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: base-security
+x-policy-Identifier: base-security
+x-policy-Type: security
+x-policy-Priority: 0
+x-policy-Path: AgentPolicies/base-security/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Base security policy applied to all agents
+
+dn: CN=base-behavior,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: base-behavior
+x-policy-Identifier: base-behavior
+x-policy-Type: behavior
+x-policy-Priority: 10
+x-policy-Path: AgentPolicies/base-behavior/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Base behavior policy for all agents
+
+dn: CN=base-resource,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: base-resource
+x-policy-Identifier: base-resource
+x-policy-Type: resource
+x-policy-Priority: 20
+x-policy-Path: AgentPolicies/base-resource/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Base resource limits for all agents
+
+dn: CN=base-network,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: base-network
+x-policy-Identifier: base-network
+x-policy-Type: network
+x-policy-Priority: 30
+x-policy-Path: AgentPolicies/base-network/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Base network policy for all agents
+
+# ============================================================================
+# TYPE POLICIES (Priority 100-199)
+# Apply based on agent type
+# ============================================================================
+
+dn: CN=type-worker,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: type-worker
+x-policy-Identifier: type-worker
+x-policy-Type: behavior
+x-policy-Priority: 100
+x-policy-Path: AgentPolicies/type-worker/policy.json
+x-policy-AppliesToTypes: autonomous
+x-policy-AppliesToTypes: assistant
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Policy for worker agents (autonomous, assistant)
+
+dn: CN=type-coordinator,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: type-coordinator
+x-policy-Identifier: type-coordinator
+x-policy-Type: behavior
+x-policy-Priority: 100
+x-policy-Path: AgentPolicies/type-coordinator/policy.json
+x-policy-AppliesToTypes: coordinator
+x-policy-AppliesToTypes: orchestrator
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Policy for coordinator agents
+
+dn: CN=type-tool,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: type-tool
+x-policy-Identifier: type-tool
+x-policy-Type: behavior
+x-policy-Priority: 100
+x-policy-Path: AgentPolicies/type-tool/policy.json
+x-policy-AppliesToTypes: tool
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Policy for tool agents (specialized single-purpose)
+
+# ============================================================================
+# TRUST LEVEL POLICIES (Priority 150)
+# Apply based on trust level
+# ============================================================================
+
+dn: CN=trust-untrusted,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: trust-untrusted
+x-policy-Identifier: trust-untrusted
+x-policy-Type: security
+x-policy-Priority: 150
+x-policy-Path: AgentPolicies/trust-untrusted/policy.json
+x-policy-AppliesToTrustLevels: 0
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Restrictive policy for untrusted agents (trust level 0)
+
+dn: CN=trust-elevated,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: trust-elevated
+x-policy-Identifier: trust-elevated
+x-policy-Type: security
+x-policy-Priority: 150
+x-policy-Path: AgentPolicies/trust-elevated/policy.json
+x-policy-AppliesToTrustLevels: 3
+x-policy-AppliesToTrustLevels: 4
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Expanded permissions for elevated trust agents (level 3-4)
+
+# ============================================================================
+# CAPABILITY POLICIES (Priority 120)
+# Apply to agents with specific capabilities
+# ============================================================================
+
+dn: CN=capability-code-review,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: capability-code-review
+x-policy-Identifier: capability-code-review
+x-policy-Type: behavior
+x-policy-Priority: 120
+x-policy-Path: AgentPolicies/capability-code-review/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Policy for agents with code review capability
+
+dn: CN=capability-security-analysis,CN=Agent Policies,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentPolicy
+cn: capability-security-analysis
+x-policy-Identifier: capability-security-analysis
+x-policy-Type: security
+x-policy-Priority: 120
+x-policy-Path: AgentPolicies/capability-security-analysis/policy.json
+x-policy-Enabled: TRUE
+x-policy-Version: 1.0.0
+description: Policy for agents with security analysis capability
+

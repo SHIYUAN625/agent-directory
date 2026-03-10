@@ -1,0 +1,37 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "base-resource",
+  "description": "Base resource limits for all agents",
+  "settings": {
+    "compute": {
+      "max_memory_mb": 4096,
+      "max_cpu_percent": 100,
+      "max_runtime_seconds": 3600,
+      "max_disk_mb": 1024
+    },
+    "llm": {
+      "daily_token_limit": 1000000,
+      "max_context_tokens": 200000,
+      "max_output_tokens": 16000,
+      "rate_limit_requests_per_minute": 60,
+      "allow_streaming": true
+    },
+    "storage": {
+      "home_quota_mb": 512,
+      "temp_quota_mb": 256,
+      "artifact_quota_mb": 1024,
+      "allow_smb_access": true
+    },
+    "network": {
+      "max_connections": 50,
+      "max_bandwidth_mbps": 100,
+      "allow_internet_egress": false
+    },
+    "agents": {
+      "max_spawned_agents": 0,
+      "max_delegated_tasks": 10,
+      "delegation_depth_limit": 2
+    }
+  }
+}

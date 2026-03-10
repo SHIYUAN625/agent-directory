@@ -1,0 +1,80 @@
+# Agent Directory Schema Extension - Container Objects
+#
+# This file creates the standard containers for storing Agent and Tool objects.
+# These containers are created in CN=System which is the standard location for
+# infrastructure objects in Active Directory.
+#
+# Prerequisites: Schema classes (03-agent-class.ldif, 04-tool-class.ldif) must be loaded first.
+#
+# IMPORTANT: Replace DC=X with your actual domain components
+# Example: DC=corp,DC=contoso,DC=com
+
+# ============================================================================
+# CN=Agents Container
+#
+# Default container for storing agent objects.
+# Agents can also be created in organizational units for departmental separation.
+# ============================================================================
+
+dn: CN=Agents,CN=System,DC=X
+changetype: add
+objectClass: container
+cn: Agents
+description: Container for AI/ML Agent identity objects
+showInAdvancedViewOnly: FALSE
+
+# ============================================================================
+# CN=Agent Tools Container
+#
+# Container for storing registered tool definitions.
+# Tools defined here can be granted to agents for authorization.
+# ============================================================================
+
+dn: CN=Agent Tools,CN=System,DC=X
+changetype: add
+objectClass: container
+cn: Agent Tools
+description: Container for Agent Tool definitions and registry
+showInAdvancedViewOnly: FALSE
+
+# ============================================================================
+# CN=Agent Sandboxes Container
+#
+# Container for storing sandbox execution environment objects.
+# Sandboxes defined here represent where agents run.
+# ============================================================================
+
+dn: CN=Agent Sandboxes,CN=System,DC=X
+changetype: add
+objectClass: container
+cn: Agent Sandboxes
+description: Container for Agent Sandbox execution environment objects
+showInAdvancedViewOnly: FALSE
+
+# ============================================================================
+# CN=Agent Policies Container
+#
+# Container for storing policy definition objects.
+# Policies defined here control agent behavior, security, and resources.
+# ============================================================================
+
+dn: CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: container
+cn: Agent Policies
+description: Container for Agent Policy definition objects
+showInAdvancedViewOnly: FALSE
+
+# ============================================================================
+# CN=Agent Instructions Container
+#
+# Container for storing instruction GPO objects.
+# Instruction GPOs defined here deliver system prompts to agents.
+# ============================================================================
+
+dn: CN=Agent Instructions,CN=System,DC=X
+changetype: add
+objectClass: container
+cn: Agent Instructions
+description: Container for Agent Instruction GPO objects
+showInAdvancedViewOnly: FALSE

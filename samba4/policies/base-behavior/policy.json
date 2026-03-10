@@ -1,0 +1,41 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "base-behavior",
+  "description": "Base behavior policy for all agents",
+  "settings": {
+    "execution": {
+      "max_iterations": 100,
+      "max_consecutive_errors": 5,
+      "idle_timeout_seconds": 300,
+      "checkpoint_interval_steps": 10,
+      "allow_self_modification": false
+    },
+    "escalation": {
+      "escalate_on_blocked": true,
+      "escalate_on_error_threshold": 3,
+      "escalate_on_confidence_below": 0.3,
+      "max_escalation_chain_length": 3,
+      "human_escalation_enabled": true
+    },
+    "communication": {
+      "allow_agent_to_agent": true,
+      "allow_human_contact": false,
+      "require_mission_context": true,
+      "max_message_size_bytes": 1048576
+    },
+    "memory": {
+      "trajectory_persistence": true,
+      "checkpoint_to_warm_storage": true,
+      "max_trajectory_length": 1000,
+      "summarize_after_steps": 50
+    },
+    "reactions": {
+      "on_finish": "ack_and_report",
+      "on_fail": "nak_and_escalate",
+      "on_retry_limit": "escalate",
+      "max_retries": 3,
+      "retry_backoff_seconds": [5, 15, 60]
+    }
+  }
+}

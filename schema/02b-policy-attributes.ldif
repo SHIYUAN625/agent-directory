@@ -1,0 +1,171 @@
+# Agent Directory Schema Extension - Policy Attributes
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Policy Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.4x
+#
+# This file defines custom attributes for the msDS-AgentPolicy object class.
+# Policies follow a GPO-like pattern: metadata in AD, content in SYSVOL.
+
+# ============================================================================
+# msDS-PolicyIdentifier
+# Unique policy name (e.g., base-security, developer-agents)
+# ============================================================================
+dn: CN=msDS-PolicyIdentifier,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyIdentifier
+lDAPDisplayName: msDS-PolicyIdentifier
+adminDisplayName: Policy Identifier
+adminDescription: Unique identifier for the policy
+attributeId: 1.3.6.1.4.1.99999.2.40
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyType
+# Policy type: security | behavior | resource | network
+# ============================================================================
+dn: CN=msDS-PolicyType,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyType
+lDAPDisplayName: msDS-PolicyType
+adminDisplayName: Policy Type
+adminDescription: Type of policy (security, behavior, resource, network)
+attributeId: 1.3.6.1.4.1.99999.2.41
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyPriority
+# Integer priority (higher wins on conflict)
+# Suggested ranges:
+#   0-99: Base policies (apply to all agents)
+#   100-199: Type policies (by agent type)
+#   200-299: Agent-specific overrides
+# ============================================================================
+dn: CN=msDS-PolicyPriority,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyPriority
+lDAPDisplayName: msDS-PolicyPriority
+adminDisplayName: Policy Priority
+adminDescription: Priority for policy merge (higher wins on conflict)
+attributeId: 1.3.6.1.4.1.99999.2.42
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 999
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyPath
+# Path to JSON policy content in SYSVOL
+# Format: AgentPolicies/{policy-name}/policy.json
+# ============================================================================
+dn: CN=msDS-PolicyPath,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyPath
+lDAPDisplayName: msDS-PolicyPath
+adminDisplayName: Policy Path
+adminDescription: Path to JSON policy content in SYSVOL
+attributeId: 1.3.6.1.4.1.99999.2.43
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyAppliesToTypes
+# Multi-valued: agent types this policy applies to
+# If empty, applies to all agents
+# ============================================================================
+dn: CN=msDS-PolicyAppliesToTypes,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyAppliesToTypes
+lDAPDisplayName: msDS-PolicyAppliesToTypes
+adminDisplayName: Policy Applies To Types
+adminDescription: Agent types this policy applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.44
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyAppliesToTrustLevels
+# Multi-valued: trust levels this policy applies to
+# If empty, applies to all trust levels
+# ============================================================================
+dn: CN=msDS-PolicyAppliesToTrustLevels,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyAppliesToTrustLevels
+lDAPDisplayName: msDS-PolicyAppliesToTrustLevels
+adminDisplayName: Policy Applies To Trust Levels
+adminDescription: Trust levels this policy applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.45
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyEnabled
+# Whether the policy is currently active
+# ============================================================================
+dn: CN=msDS-PolicyEnabled,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyEnabled
+lDAPDisplayName: msDS-PolicyEnabled
+adminDisplayName: Policy Enabled
+adminDescription: Whether the policy is currently active
+attributeId: 1.3.6.1.4.1.99999.2.46
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-PolicyVersion
+# Version string for policy content (for cache invalidation)
+# ============================================================================
+dn: CN=msDS-PolicyVersion,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-PolicyVersion
+lDAPDisplayName: msDS-PolicyVersion
+adminDisplayName: Policy Version
+adminDescription: Version string for policy content
+attributeId: 1.3.6.1.4.1.99999.2.47
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE

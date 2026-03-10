@@ -1,0 +1,105 @@
+# Autonomous Enterprise AD Schema Extension - Default Instruction GPOs (Samba4)
+#
+# This file creates pre-defined instruction GPO objects.
+# Instruction content (markdown) is stored in SYSVOL at:
+#   AgentInstructions/{gpo-name}/instructions.md
+#
+# Prerequisites:
+#   - Instruction GPO class (04c-instruction-gpo-class.ldif) must be loaded
+#   - Agent Instructions container (07-containers.ldif) must be created
+#
+# IMPORTANT: Replace DC=autonomy,DC=local with your actual domain components
+
+# ============================================================================
+# BASE INSTRUCTIONS (Priority 0-99)
+# Apply to all agents regardless of type or trust level
+# ============================================================================
+
+dn: CN=base-agent-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: base-agent-instructions
+x-gpo-DisplayName: Base Agent Instructions
+x-gpo-InstructionPath: AgentInstructions/base-agent-instructions/instructions.md
+x-gpo-Priority: 0
+x-gpo-MergeStrategy: append
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Foundation system prompt applied to every agent in the domain
+
+# ============================================================================
+# TYPE INSTRUCTIONS (Priority 100-199)
+# Apply based on agent type classification
+# ============================================================================
+
+dn: CN=type-assistant-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: type-assistant-instructions
+x-gpo-DisplayName: Assistant Agent Instructions
+x-gpo-InstructionPath: AgentInstructions/type-assistant-instructions/instructions.md
+x-gpo-Priority: 100
+x-gpo-MergeStrategy: append
+x-gpo-AppliesToTypes: assistant
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Instructions for interactive assistant agents
+
+dn: CN=type-autonomous-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: type-autonomous-instructions
+x-gpo-DisplayName: Autonomous Agent Instructions
+x-gpo-InstructionPath: AgentInstructions/type-autonomous-instructions/instructions.md
+x-gpo-Priority: 100
+x-gpo-MergeStrategy: append
+x-gpo-AppliesToTypes: autonomous
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Instructions for autonomous task-execution agents
+
+dn: CN=type-coordinator-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: type-coordinator-instructions
+x-gpo-DisplayName: Coordinator Agent Instructions
+x-gpo-InstructionPath: AgentInstructions/type-coordinator-instructions/instructions.md
+x-gpo-Priority: 100
+x-gpo-MergeStrategy: append
+x-gpo-AppliesToTypes: coordinator
+x-gpo-AppliesToTypes: orchestrator
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Instructions for coordinator and orchestrator agents
+
+dn: CN=type-tool-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: type-tool-instructions
+x-gpo-DisplayName: Tool Agent Instructions
+x-gpo-InstructionPath: AgentInstructions/type-tool-instructions/instructions.md
+x-gpo-Priority: 100
+x-gpo-MergeStrategy: append
+x-gpo-AppliesToTypes: tool
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Instructions for single-purpose tool agents
+
+# ============================================================================
+# TRUST LEVEL INSTRUCTIONS (Priority 200)
+# Additional instructions based on trust tier
+# ============================================================================
+
+dn: CN=trust-elevated-instructions,CN=Agent Instructions,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentInstructionGPO
+cn: trust-elevated-instructions
+x-gpo-DisplayName: Elevated Trust Instructions
+x-gpo-InstructionPath: AgentInstructions/trust-elevated-instructions/instructions.md
+x-gpo-Priority: 200
+x-gpo-MergeStrategy: append
+x-gpo-AppliesToTrustLevels: 3
+x-gpo-AppliesToTrustLevels: 4
+x-gpo-Enabled: TRUE
+x-gpo-Version: 1.0.0
+description: Additional instructions for elevated-trust agents (spawn, delegate, manage)

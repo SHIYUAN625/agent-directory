@@ -1,0 +1,46 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "trust-untrusted",
+  "description": "Restrictive policy for untrusted agents (trust level 0)",
+  "settings": {
+    "tools": {
+      "allow": [
+        "filesystem.read",
+        "jq.processor",
+        "ray.status"
+      ],
+      "deny": ["*"],
+      "allow_overrides_deny": true
+    },
+    "credentials": {
+      "allow_keytab_access": false,
+      "credential_broker_required": true,
+      "allow_credential_delegation": false
+    },
+    "sandbox": {
+      "bwrap_required": true,
+      "network_namespace": "none",
+      "no_new_privileges": true,
+      "read_only_root": true
+    },
+    "compute": {
+      "max_memory_mb": 512,
+      "max_runtime_seconds": 300,
+      "max_disk_mb": 64
+    },
+    "network": {
+      "allow_internet": false,
+      "allow_intranet": false,
+      "whitelist": []
+    },
+    "agents": {
+      "max_spawned_agents": 0,
+      "max_delegated_tasks": 0
+    },
+    "behavior": {
+      "supervised_only": true,
+      "require_approval_for_actions": true
+    }
+  }
+}

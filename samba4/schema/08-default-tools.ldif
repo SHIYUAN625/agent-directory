@@ -1,0 +1,474 @@
+# Autonomous Enterprise AD Schema Extension - Default Tool Definitions (Samba4)
+#
+# This file creates pre-defined tool objects for common applications and utilities.
+# Adapted for Linux/UNIX environments used by autonomous agents.
+#
+# Prerequisites:
+#   - Tool class (05-tool-class.ldif) must be loaded
+#   - Agent Tools container (07-containers.ldif) must be created
+#
+# IMPORTANT: Replace DC=autonomy,DC=local with your actual domain components
+
+# ============================================================================
+# SHELL & SCRIPTING TOOLS
+# ============================================================================
+
+dn: CN=gnu.bash,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: gnu.bash
+x-tool-Identifier: gnu.bash
+x-tool-DisplayName: Bash Shell
+x-tool-Category: shell
+x-tool-Executable: /bin/bash
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 2
+x-tool-Constraints: restricted_mode=false
+x-tool-Constraints: max_runtime=300
+x-tool-AuditRequired: TRUE
+description: GNU Bash shell for command execution
+
+dn: CN=gnu.bash.restricted,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: gnu.bash.restricted
+x-tool-Identifier: gnu.bash.restricted
+x-tool-DisplayName: Bash Shell (Restricted)
+x-tool-Category: shell
+x-tool-Executable: /bin/bash -r
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: restricted_mode=true
+x-tool-Constraints: no_cd=true
+x-tool-Constraints: no_redirect=true
+x-tool-AuditRequired: TRUE
+description: GNU Bash in restricted mode for safe operations
+
+dn: CN=python.interpreter,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: python.interpreter
+x-tool-Identifier: python.interpreter
+x-tool-DisplayName: Python Interpreter
+x-tool-Category: development
+x-tool-Executable: /usr/bin/python3
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: max_runtime=600
+x-tool-AuditRequired: TRUE
+description: Python 3 programming language interpreter
+
+dn: CN=node.interpreter,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: node.interpreter
+x-tool-Identifier: node.interpreter
+x-tool-DisplayName: Node.js Runtime
+x-tool-Category: development
+x-tool-Executable: /usr/bin/node
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: max_runtime=600
+x-tool-AuditRequired: TRUE
+description: Node.js JavaScript runtime
+
+# ============================================================================
+# DEVELOPMENT TOOLS
+# ============================================================================
+
+dn: CN=git.cli,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: git.cli
+x-tool-Identifier: git.cli
+x-tool-DisplayName: Git CLI
+x-tool-Category: development
+x-tool-Executable: /usr/bin/git
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: push_access=require_authorization
+x-tool-AuditRequired: FALSE
+description: Git version control CLI
+
+dn: CN=docker.cli,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: docker.cli
+x-tool-Identifier: docker.cli
+x-tool-DisplayName: Docker CLI
+x-tool-Category: development
+x-tool-Executable: /usr/bin/docker
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 2
+x-tool-Constraints: privileged_containers=prohibited
+x-tool-Constraints: host_mounts=restricted
+x-tool-AuditRequired: TRUE
+description: Docker container CLI
+
+dn: CN=kubernetes.kubectl,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: kubernetes.kubectl
+x-tool-Identifier: kubernetes.kubectl
+x-tool-DisplayName: Kubectl
+x-tool-Category: development
+x-tool-Executable: /usr/bin/kubectl
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 3
+x-tool-Constraints: namespace_scope=restricted
+x-tool-Constraints: secret_access=prohibited
+x-tool-AuditRequired: TRUE
+description: Kubernetes command-line tool
+
+dn: CN=make.build,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: make.build
+x-tool-Identifier: make.build
+x-tool-DisplayName: GNU Make
+x-tool-Category: development
+x-tool-Executable: /usr/bin/make
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-AuditRequired: FALSE
+description: GNU Make build automation tool
+
+dn: CN=cargo.build,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: cargo.build
+x-tool-Identifier: cargo.build
+x-tool-DisplayName: Cargo (Rust)
+x-tool-Category: development
+x-tool-Executable: /usr/bin/cargo
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-AuditRequired: FALSE
+description: Rust package manager and build tool
+
+# ============================================================================
+# NETWORK TOOLS
+# ============================================================================
+
+dn: CN=network.ssh,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: network.ssh
+x-tool-Identifier: network.ssh
+x-tool-DisplayName: SSH Client
+x-tool-Category: network
+x-tool-Executable: /usr/bin/ssh
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: destination_whitelist=required
+x-tool-Constraints: key_auth_only=true
+x-tool-Constraints: port_forwarding=prohibited
+x-tool-AuditRequired: TRUE
+description: SSH secure shell client
+
+dn: CN=network.curl,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: network.curl
+x-tool-Identifier: network.curl
+x-tool-DisplayName: cURL
+x-tool-Category: network
+x-tool-Executable: /usr/bin/curl
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: destination_whitelist=configurable
+x-tool-Constraints: max_time=60
+x-tool-AuditRequired: FALSE
+description: cURL HTTP/HTTPS client
+
+dn: CN=network.wget,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: network.wget
+x-tool-Identifier: network.wget
+x-tool-DisplayName: wget
+x-tool-Category: network
+x-tool-Executable: /usr/bin/wget
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: destination_whitelist=configurable
+x-tool-AuditRequired: FALSE
+description: wget download utility
+
+dn: CN=api.http,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: api.http
+x-tool-Identifier: api.http
+x-tool-DisplayName: HTTP/REST API Calls
+x-tool-Category: network
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: destination_whitelist=configurable
+x-tool-Constraints: internal_apis_only=default
+x-tool-Constraints: rate_limit=100/minute
+x-tool-AuditRequired: FALSE
+description: HTTP and REST API call capability
+
+dn: CN=nats.client,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: nats.client
+x-tool-Identifier: nats.client
+x-tool-DisplayName: NATS Client
+x-tool-Category: network
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: subjects_from_config=true
+x-tool-AuditRequired: FALSE
+description: NATS messaging client for inter-agent communication
+
+# ============================================================================
+# FILE SYSTEM TOOLS
+# ============================================================================
+
+dn: CN=filesystem.read,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: filesystem.read
+x-tool-Identifier: filesystem.read
+x-tool-DisplayName: File System Read
+x-tool-Category: filesystem
+x-tool-RiskLevel: 1
+x-tool-RequiredTrust: 0
+x-tool-Constraints: path_whitelist=configurable
+x-tool-Constraints: sensitive_directories=excluded
+x-tool-AuditRequired: FALSE
+description: File system read access capability
+
+dn: CN=filesystem.write,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: filesystem.write
+x-tool-Identifier: filesystem.write
+x-tool-DisplayName: File System Write
+x-tool-Category: filesystem
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 1
+x-tool-Constraints: path_whitelist=required
+x-tool-Constraints: executable_creation=prohibited
+x-tool-Constraints: system_directories=excluded
+x-tool-AuditRequired: TRUE
+description: File system write access capability
+
+dn: CN=filesystem.delete,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: filesystem.delete
+x-tool-Identifier: filesystem.delete
+x-tool-DisplayName: File System Delete
+x-tool-Category: filesystem
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 2
+x-tool-Constraints: path_whitelist=required
+x-tool-Constraints: recursive_delete=require_approval
+x-tool-Constraints: system_directories=excluded
+x-tool-AuditRequired: TRUE
+description: File system delete access capability
+
+# ============================================================================
+# DATABASE & DATA TOOLS
+# ============================================================================
+
+dn: CN=database.postgresql,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: database.postgresql
+x-tool-Identifier: database.postgresql
+x-tool-DisplayName: PostgreSQL Client
+x-tool-Category: data
+x-tool-Executable: /usr/bin/psql
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 2
+x-tool-Constraints: connection_whitelist=required
+x-tool-Constraints: ddl_operations=prohibited
+x-tool-Constraints: query_timeout=30
+x-tool-Constraints: row_limit=10000
+x-tool-AuditRequired: TRUE
+description: PostgreSQL database client
+
+dn: CN=database.redis,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: database.redis
+x-tool-Identifier: database.redis
+x-tool-DisplayName: Redis Client
+x-tool-Category: data
+x-tool-Executable: /usr/bin/redis-cli
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: dangerous_commands=prohibited
+x-tool-AuditRequired: TRUE
+description: Redis database client
+
+dn: CN=jq.processor,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: jq.processor
+x-tool-Identifier: jq.processor
+x-tool-DisplayName: jq JSON Processor
+x-tool-Category: data
+x-tool-Executable: /usr/bin/jq
+x-tool-RiskLevel: 1
+x-tool-RequiredTrust: 0
+x-tool-AuditRequired: FALSE
+description: jq command-line JSON processor
+
+# ============================================================================
+# SECURITY TOOLS
+# ============================================================================
+
+dn: CN=security.gpg,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: security.gpg
+x-tool-Identifier: security.gpg
+x-tool-DisplayName: GnuPG
+x-tool-Category: security
+x-tool-Executable: /usr/bin/gpg
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: key_generation=require_approval
+x-tool-Constraints: key_export=prohibited
+x-tool-AuditRequired: TRUE
+description: GnuPG encryption and signing tool
+
+dn: CN=security.openssl,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: security.openssl
+x-tool-Identifier: security.openssl
+x-tool-DisplayName: OpenSSL
+x-tool-Category: security
+x-tool-Executable: /usr/bin/openssl
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: key_generation=require_approval
+x-tool-AuditRequired: TRUE
+description: OpenSSL cryptographic toolkit
+
+# ============================================================================
+# MANAGEMENT TOOLS
+# ============================================================================
+
+dn: CN=samba.tool,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: samba.tool
+x-tool-Identifier: samba.tool
+x-tool-DisplayName: Samba Tool
+x-tool-Category: management
+x-tool-Executable: /usr/bin/samba-tool
+x-tool-RiskLevel: 5
+x-tool-RequiredTrust: 4
+x-tool-Constraints: read_only=default
+x-tool-AuditRequired: TRUE
+description: Samba AD management tool
+
+dn: CN=ldap.search,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: ldap.search
+x-tool-Identifier: ldap.search
+x-tool-DisplayName: LDAP Search
+x-tool-Category: management
+x-tool-Executable: /usr/bin/ldapsearch
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: base_dn=restricted
+x-tool-AuditRequired: FALSE
+description: LDAP directory search tool
+
+dn: CN=ldap.modify,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: ldap.modify
+x-tool-Identifier: ldap.modify
+x-tool-DisplayName: LDAP Modify
+x-tool-Category: management
+x-tool-Executable: /usr/bin/ldapmodify
+x-tool-RiskLevel: 5
+x-tool-RequiredTrust: 4
+x-tool-Constraints: base_dn=restricted
+x-tool-AuditRequired: TRUE
+description: LDAP directory modification tool
+
+# ============================================================================
+# RAY & ORCHESTRATION TOOLS
+# ============================================================================
+
+dn: CN=ray.submit,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: ray.submit
+x-tool-Identifier: ray.submit
+x-tool-DisplayName: Ray Job Submit
+x-tool-Category: management
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: cluster_scope=own_jobs
+x-tool-AuditRequired: TRUE
+description: Ray cluster job submission
+
+dn: CN=ray.status,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: ray.status
+x-tool-Identifier: ray.status
+x-tool-DisplayName: Ray Status
+x-tool-Category: management
+x-tool-RiskLevel: 1
+x-tool-RequiredTrust: 0
+x-tool-AuditRequired: FALSE
+description: Ray cluster status query
+
+# ============================================================================
+# LLM INFERENCE TOOLS
+# ============================================================================
+
+dn: CN=llm.inference,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: llm.inference
+x-tool-Identifier: llm.inference
+x-tool-DisplayName: LLM Inference
+x-tool-Category: development
+x-tool-RiskLevel: 2
+x-tool-RequiredTrust: 1
+x-tool-Constraints: models_from_config=true
+x-tool-Constraints: quota_enforced=true
+x-tool-AuditRequired: TRUE
+description: LLM inference endpoint access
+
+dn: CN=agent.spawn,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: agent.spawn
+x-tool-Identifier: agent.spawn
+x-tool-DisplayName: Spawn Agent
+x-tool-Category: management
+x-tool-RiskLevel: 4
+x-tool-RequiredTrust: 3
+x-tool-Constraints: agent_types=restricted
+x-tool-Constraints: max_spawn=10
+x-tool-AuditRequired: TRUE
+description: Spawn child agent capability
+
+dn: CN=agent.delegate,CN=Agent Tools,CN=System,DC=autonomy,DC=local
+changetype: add
+objectClass: x-agentTool
+cn: agent.delegate
+x-tool-Identifier: agent.delegate
+x-tool-DisplayName: Delegate to Agent
+x-tool-Category: management
+x-tool-RiskLevel: 3
+x-tool-RequiredTrust: 2
+x-tool-Constraints: delegation_scope_from_config=true
+x-tool-AuditRequired: TRUE
+description: Delegate task to another agent via queue
+

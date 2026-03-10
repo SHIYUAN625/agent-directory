@@ -1,0 +1,372 @@
+# Autonomous Enterprise AD Schema Extension - Agent Attributes (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.x
+#
+# This file defines custom attributes for autonomous AI agents.
+# Adapted from Windows AD schema for Samba4 compatibility.
+#
+# Key differences from Windows AD version:
+#   - Uses x-agent- prefix instead of msDS-
+#   - No gMSA support (password rotation handled by provisioning service)
+#   - Additional attributes for NATS, LLM access, and enterprise operations
+
+# ============================================================================
+# IDENTITY & CLASSIFICATION ATTRIBUTES
+# ============================================================================
+
+# x-agent-Type
+# Classification: autonomous | assistant | tool | orchestrator | coordinator
+dn: CN=x-agent-Type,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Type
+lDAPDisplayName: x-agent-Type
+adminDisplayName: Agent Type
+adminDescription: Classification of the agent (autonomous, assistant, tool, orchestrator, coordinator)
+attributeId: 1.3.6.1.4.1.99999.2.1
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-agent-TrustLevel
+# Trust tier from 0 (Untrusted) to 4 (System)
+# 0 = Untrusted: Read-only, no network, no delegation
+# 1 = Basic: Limited read/write, no delegation
+# 2 = Standard: Normal operations, constrained delegation
+# 3 = Elevated: Broad access, can spawn agents
+# 4 = System: Full trust, equivalent to service account
+dn: CN=x-agent-TrustLevel,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-TrustLevel
+lDAPDisplayName: x-agent-TrustLevel
+adminDisplayName: Agent Trust Level
+adminDescription: Trust tier for the agent (0=Untrusted, 1=Basic, 2=Standard, 3=Elevated, 4=System)
+attributeId: 1.3.6.1.4.1.99999.2.2
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 4
+
+# x-agent-Owner
+# Distinguished name of the identity responsible for this agent
+dn: CN=x-agent-Owner,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Owner
+lDAPDisplayName: x-agent-Owner
+adminDisplayName: Agent Owner
+adminDescription: Distinguished name of the identity responsible for this agent
+attributeId: 1.3.6.1.4.1.99999.2.3
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-agent-Parent
+# Distinguished name of a parent agent for hierarchical relationships
+dn: CN=x-agent-Parent,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Parent
+lDAPDisplayName: x-agent-Parent
+adminDisplayName: Agent Parent
+adminDescription: Distinguished name of parent agent for hierarchical relationships
+attributeId: 1.3.6.1.4.1.99999.2.4
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-agent-Model
+# AI model identifier (e.g., claude-opus-4-5, gpt-4)
+dn: CN=x-agent-Model,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Model
+lDAPDisplayName: x-agent-Model
+adminDisplayName: Agent Model
+adminDescription: AI model identifier for the agent (e.g., claude-opus-4-5)
+attributeId: 1.3.6.1.4.1.99999.2.5
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# ============================================================================
+# CAPABILITIES & TOOLS
+# ============================================================================
+
+# x-agent-Capabilities
+# Multi-valued URNs representing agent capabilities
+# Format: urn:agent:capability:{category}:{name}
+# Examples: urn:agent:capability:code:review, urn:agent:capability:analysis:security
+dn: CN=x-agent-Capabilities,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Capabilities
+lDAPDisplayName: x-agent-Capabilities
+adminDisplayName: Agent Capabilities
+adminDescription: List of registered capabilities the agent possesses (URN format)
+attributeId: 1.3.6.1.4.1.99999.2.6
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-agent-AuthorizedTools
+# Links to agentTool objects the agent is authorized to use
+dn: CN=x-agent-AuthorizedTools,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-AuthorizedTools
+lDAPDisplayName: x-agent-AuthorizedTools
+adminDisplayName: Agent Authorized Tools
+adminDescription: Links to tool objects the agent is authorized to use
+attributeId: 1.3.6.1.4.1.99999.2.7
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-agent-DeniedTools
+# Links to agentTool objects explicitly denied (overrides grants)
+dn: CN=x-agent-DeniedTools,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-DeniedTools
+lDAPDisplayName: x-agent-DeniedTools
+adminDisplayName: Agent Denied Tools
+adminDescription: Links to tool objects explicitly denied to the agent (overrides grants)
+attributeId: 1.3.6.1.4.1.99999.2.8
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-agent-DelegationScope
+# Service principal names the agent can access via delegation
+dn: CN=x-agent-DelegationScope,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-DelegationScope
+lDAPDisplayName: x-agent-DelegationScope
+adminDisplayName: Agent Delegation Scope
+adminDescription: Service principals the agent can access on behalf of delegating users
+attributeId: 1.3.6.1.4.1.99999.2.9
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+
+# ============================================================================
+# RUNTIME & MESSAGING
+# ============================================================================
+
+# x-agent-RuntimeEndpoint (DEPRECATED - use x-sandbox-Endpoint on sandbox)
+# URI where the agent can be accessed
+# Retained for backward compatibility; new deployments should use sandbox endpoints.
+dn: CN=x-agent-RuntimeEndpoint,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-RuntimeEndpoint
+lDAPDisplayName: x-agent-RuntimeEndpoint
+adminDisplayName: Agent Runtime Endpoint
+adminDescription: URI endpoint where the agent runtime is accessible (DEPRECATED - use sandbox)
+attributeId: 1.3.6.1.4.1.99999.2.10
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-agent-NatsSubjects
+# NATS subjects the agent subscribes to for task queue
+# Examples: tasks.code-review, tasks.analysis, escalations.team.engineering
+dn: CN=x-agent-NatsSubjects,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-NatsSubjects
+lDAPDisplayName: x-agent-NatsSubjects
+adminDisplayName: Agent NATS Subjects
+adminDescription: NATS subjects the agent subscribes to for task queues
+attributeId: 1.3.6.1.4.1.99999.2.11
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-agent-EscalationPath
+# DN of the agent or group to escalate to when blocked
+dn: CN=x-agent-EscalationPath,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-EscalationPath
+lDAPDisplayName: x-agent-EscalationPath
+adminDisplayName: Agent Escalation Path
+adminDescription: DN of agent/group to escalate to when blocked or unable to resolve
+attributeId: 1.3.6.1.4.1.99999.2.12
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: TRUE
+searchFlags: 1
+
+# ============================================================================
+# POLICY & AUDIT
+# ============================================================================
+
+# x-agent-Policies
+# Applied policy identifiers or DNs (merged by priority at boot)
+dn: CN=x-agent-Policies,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Policies
+lDAPDisplayName: x-agent-Policies
+adminDisplayName: Agent Policies
+adminDescription: List of policy DNs applied to the agent (merged by priority)
+attributeId: 1.3.6.1.4.1.99999.2.13
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 0
+
+# x-agent-AuditLevel
+# Required audit verbosity (0=Minimal, 1=Standard, 2=Detailed, 3=Debug)
+dn: CN=x-agent-AuditLevel,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-AuditLevel
+lDAPDisplayName: x-agent-AuditLevel
+adminDisplayName: Agent Audit Level
+adminDescription: Required audit verbosity for this agent (0=Minimal, 1=Standard, 2=Detailed, 3=Debug)
+attributeId: 1.3.6.1.4.1.99999.2.14
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 0
+rangeLower: 0
+rangeUpper: 3
+
+# ============================================================================
+# LLM & EXTERNAL SERVICES
+# ============================================================================
+
+# x-agent-LLMAccess
+# Multi-valued: model names agent can use for inference
+# Examples: claude-opus-4-5, claude-sonnet-4, gpt-4
+dn: CN=x-agent-LLMAccess,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-LLMAccess
+lDAPDisplayName: x-agent-LLMAccess
+adminDisplayName: Agent LLM Access
+adminDescription: Model names the agent is authorized to use for inference
+attributeId: 1.3.6.1.4.1.99999.2.15
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-agent-LLMQuota
+# JSON-encoded quota: {"daily_tokens": 1000000, "max_context": 200000}
+dn: CN=x-agent-LLMQuota,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-LLMQuota
+lDAPDisplayName: x-agent-LLMQuota
+adminDisplayName: Agent LLM Quota
+adminDescription: JSON-encoded LLM quota (daily_tokens, max_context)
+attributeId: 1.3.6.1.4.1.99999.2.16
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-agent-GitHubRepos
+# Multi-valued: org/repo patterns agent can access
+# Examples: myorg/*, myorg/public-repo, myorg/private-*
+dn: CN=x-agent-GitHubRepos,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-GitHubRepos
+lDAPDisplayName: x-agent-GitHubRepos
+adminDisplayName: Agent GitHub Repos
+adminDescription: GitHub org/repo patterns agent can access
+attributeId: 1.3.6.1.4.1.99999.2.17
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+
+# x-agent-GitHubPermissions
+# GitHub permission level: read | write | admin
+dn: CN=x-agent-GitHubPermissions,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-GitHubPermissions
+lDAPDisplayName: x-agent-GitHubPermissions
+adminDisplayName: Agent GitHub Permissions
+adminDescription: GitHub permission level (read, write, admin)
+attributeId: 1.3.6.1.4.1.99999.2.18
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# ============================================================================
+# MISSION & STATE
+# ============================================================================
+
+# x-agent-Mission
+# High-level mission statement for the agent
+dn: CN=x-agent-Mission,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Mission
+lDAPDisplayName: x-agent-Mission
+adminDisplayName: Agent Mission
+adminDescription: High-level mission statement for the agent
+attributeId: 1.3.6.1.4.1.99999.2.19
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-agent-StateEndpoint
+# URI to warm storage for agent state (PostgreSQL connection or API)
+dn: CN=x-agent-StateEndpoint,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-StateEndpoint
+lDAPDisplayName: x-agent-StateEndpoint
+adminDisplayName: Agent State Endpoint
+adminDescription: URI to warm storage for agent state checkpoints
+attributeId: 1.3.6.1.4.1.99999.2.20
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-agent-Sandbox
+# Links to x-agentSandbox objects where this agent can run
+dn: CN=x-agent-Sandbox,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-Sandbox
+lDAPDisplayName: x-agent-Sandbox
+adminDisplayName: Agent Sandbox
+adminDescription: Links to sandbox objects where this agent is authorized to run
+attributeId: 1.3.6.1.4.1.99999.2.21
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+
+# NOTE: x-agent-InstructionGPOs (OID 2.22) is defined in 01c-instruction-gpo-attributes.ldif
+

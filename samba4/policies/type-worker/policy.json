@@ -1,0 +1,42 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "type-worker",
+  "description": "Policy for worker agents (autonomous, assistant types)",
+  "settings": {
+    "execution": {
+      "max_iterations": 50,
+      "checkpoint_interval_steps": 5
+    },
+    "escalation": {
+      "escalate_on_blocked": true,
+      "escalate_on_error_threshold": 2
+    },
+    "tools": {
+      "allow": [
+        "filesystem.read",
+        "filesystem.write",
+        "git.cli",
+        "python.interpreter",
+        "node.interpreter",
+        "api.http",
+        "nats.client",
+        "jq.processor",
+        "llm.inference"
+      ]
+    },
+    "compute": {
+      "max_memory_mb": 2048,
+      "max_runtime_seconds": 1800
+    },
+    "agents": {
+      "max_spawned_agents": 0,
+      "max_delegated_tasks": 5
+    },
+    "behavior": {
+      "pull_from_queue": true,
+      "report_progress": true,
+      "accept_supervision": true
+    }
+  }
+}

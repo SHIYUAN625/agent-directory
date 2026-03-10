@@ -1,0 +1,215 @@
+# Agent Directory Schema Extension - Instruction GPO Attributes
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Agent linkage attribute OID: 1.3.6.1.4.1.{PEN}.2.14
+# Instruction GPO Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.6x
+#
+# This file defines custom attributes for the msDS-AgentInstructionGPO object class.
+# Instruction GPOs follow the AD Group Policy pattern:
+#   - Metadata (scope, priority, version) stored in AD
+#   - Content (system prompt / instructions) stored in SYSVOL as markdown
+#   - Linked to agents directly or scoped by type/trust/group
+#   - Layered by priority with configurable merge strategy
+
+# ============================================================================
+# AGENT LINKAGE ATTRIBUTE
+# ============================================================================
+
+# msDS-AgentInstructionGPOs
+# Multi-valued DNs linking an agent to its instruction GPOs.
+# Agents inherit instructions from directly linked GPOs plus
+# any GPOs that match by scope (type, trust level, group).
+dn: CN=msDS-AgentInstructionGPOs,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-AgentInstructionGPOs
+lDAPDisplayName: msDS-AgentInstructionGPOs
+adminDisplayName: Agent Instruction GPOs
+adminDescription: Links to instruction GPO objects that provide this agent's system prompt
+attributeId: 1.3.6.1.4.1.99999.2.14
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# GPO IDENTITY
+# ============================================================================
+
+# msDS-GPODisplayName
+dn: CN=msDS-GPODisplayName,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPODisplayName
+lDAPDisplayName: msDS-GPODisplayName
+adminDisplayName: GPO Display Name
+adminDescription: Human-readable display name for the instruction GPO
+attributeId: 1.3.6.1.4.1.99999.2.60
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# msDS-GPOInstructionPath
+# SYSVOL-relative path to instruction content
+# Format: AgentInstructions/{gpo-name}/instructions.md
+dn: CN=msDS-GPOInstructionPath,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOInstructionPath
+lDAPDisplayName: msDS-GPOInstructionPath
+adminDisplayName: GPO Instruction Path
+adminDescription: SYSVOL-relative path to instruction content (markdown)
+attributeId: 1.3.6.1.4.1.99999.2.61
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# GPO PRECEDENCE
+# ============================================================================
+
+# msDS-GPOPriority
+# Integer priority for merge ordering (higher priority = applied later = wins conflicts)
+# Suggested ranges:
+#   0-99:    Base instructions (apply to all agents)
+#   100-199: Type-specific instructions (by agent type)
+#   200-299: Trust-level-specific instructions
+#   300-399: Group-specific instructions
+#   400+:    Agent-specific overrides
+dn: CN=msDS-GPOPriority,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOPriority
+lDAPDisplayName: msDS-GPOPriority
+adminDisplayName: GPO Priority
+adminDescription: Priority for instruction merge ordering (higher = applied later, wins conflicts)
+attributeId: 1.3.6.1.4.1.99999.2.62
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 999
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# msDS-GPOMergeStrategy
+# How this GPO's instructions combine with lower-priority instructions:
+#   prepend  - Insert before existing instructions
+#   append   - Add after existing instructions (default)
+#   replace  - Discard all lower-priority instructions
+dn: CN=msDS-GPOMergeStrategy,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOMergeStrategy
+lDAPDisplayName: msDS-GPOMergeStrategy
+adminDisplayName: GPO Merge Strategy
+adminDescription: How instructions merge with lower-priority GPOs (prepend, append, replace)
+attributeId: 1.3.6.1.4.1.99999.2.63
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# GPO SCOPE
+# ============================================================================
+
+# msDS-GPOAppliesToTypes
+dn: CN=msDS-GPOAppliesToTypes,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOAppliesToTypes
+lDAPDisplayName: msDS-GPOAppliesToTypes
+adminDisplayName: GPO Applies To Types
+adminDescription: Agent types this instruction GPO applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.64
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# msDS-GPOAppliesToTrustLevels
+dn: CN=msDS-GPOAppliesToTrustLevels,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOAppliesToTrustLevels
+lDAPDisplayName: msDS-GPOAppliesToTrustLevels
+adminDisplayName: GPO Applies To Trust Levels
+adminDescription: Trust levels this instruction GPO applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.65
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# msDS-GPOAppliesToGroups
+# Multi-valued DNs: AD groups this GPO applies to
+dn: CN=msDS-GPOAppliesToGroups,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOAppliesToGroups
+lDAPDisplayName: msDS-GPOAppliesToGroups
+adminDisplayName: GPO Applies To Groups
+adminDescription: AD group DNs this instruction GPO applies to (membership-based scoping)
+attributeId: 1.3.6.1.4.1.99999.2.66
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# GPO STATE
+# ============================================================================
+
+# msDS-GPOEnabled
+dn: CN=msDS-GPOEnabled,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOEnabled
+lDAPDisplayName: msDS-GPOEnabled
+adminDisplayName: GPO Enabled
+adminDescription: Whether the instruction GPO is currently active
+attributeId: 1.3.6.1.4.1.99999.2.67
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# msDS-GPOVersion
+# Version string for instruction content (for cache invalidation)
+dn: CN=msDS-GPOVersion,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-GPOVersion
+lDAPDisplayName: msDS-GPOVersion
+adminDisplayName: GPO Version
+adminDescription: Version string for instruction content (cache invalidation)
+attributeId: 1.3.6.1.4.1.99999.2.68
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE

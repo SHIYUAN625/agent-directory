@@ -1,0 +1,71 @@
+# Agent Directory Schema Extension - Policy Object Class
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.4
+#
+# This file defines the msDS-AgentPolicy structural class.
+# Prerequisites: 02b-policy-attributes.ldif must be loaded first.
+
+# ============================================================================
+# msDS-AgentPolicy Object Class
+#
+# Inherits from: top
+#
+# This class represents policies that control agent behavior. Policies follow
+# a GPO-like pattern:
+#   - Policy metadata stored in AD (this object)
+#   - Policy content (JSON) stored in SYSVOL
+#
+# Policy Inheritance:
+#   Base Policy (Priority 0)      -> All agents
+#       |
+#   Type Policy (Priority 100)    -> By agent type (developer, coordinator)
+#       |
+#   Agent-Specific (Priority 200) -> Individual agent overrides
+#
+# At boot, agents:
+#   1. Query LDAP for own attributes + msDS-AgentPolicies
+#   2. Fetch linked policy JSONs from SYSVOL via SMB
+#   3. Merge by priority (higher wins)
+#   4. Apply to sandbox, credential broker, runtime config
+# ============================================================================
+
+dn: CN=msDS-AgentPolicy,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: classSchema
+cn: msDS-AgentPolicy
+lDAPDisplayName: msDS-AgentPolicy
+adminDisplayName: Agent Policy
+adminDescription: Policy object controlling agent behavior (GPO-like pattern)
+governsId: 1.3.6.1.4.1.99999.1.4
+objectClassCategory: 1
+subClassOf: top
+rdnAttId: cn
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+defaultObjectCategory: CN=msDS-AgentPolicy,CN=Schema,CN=Configuration,DC=X
+#
+# mustContain: Required attributes for policies
+#
+mustContain: cn
+mustContain: msDS-PolicyIdentifier
+mustContain: msDS-PolicyType
+mustContain: msDS-PolicyPriority
+#
+# mayContain: Optional attributes for policies
+#
+mayContain: msDS-PolicyPath
+mayContain: msDS-PolicyAppliesToTypes
+mayContain: msDS-PolicyAppliesToTrustLevels
+mayContain: msDS-PolicyEnabled
+mayContain: msDS-PolicyVersion
+mayContain: description
+#
+# possSuperiors: Containers where policies can be created
+#
+possSuperiors: container
+possSuperiors: organizationalUnit

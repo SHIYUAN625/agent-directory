@@ -1,0 +1,51 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "base-network",
+  "description": "Base network policy for all agents",
+  "settings": {
+    "egress": {
+      "allow_internet": false,
+      "allow_intranet": true,
+      "whitelist": [
+        "*.autonomy.local",
+        "nats.autonomy.local:4222",
+        "ldap.autonomy.local:389",
+        "ldap.autonomy.local:636",
+        "smb.autonomy.local:445",
+        "ray.autonomy.local:*"
+      ],
+      "blacklist": []
+    },
+    "ingress": {
+      "allow_vsock_from_host": true,
+      "allow_nats_messages": true,
+      "exposed_ports": []
+    },
+    "dns": {
+      "allow_external_dns": false,
+      "internal_dns_servers": ["dns.autonomy.local"],
+      "allowed_domains": ["*.autonomy.local"]
+    },
+    "protocols": {
+      "allow_http": true,
+      "allow_https": true,
+      "allow_grpc": true,
+      "allow_ssh": false,
+      "allow_raw_sockets": false
+    },
+    "nats": {
+      "server": "nats://nats.autonomy.local:4222",
+      "cluster_id": "agent-cluster",
+      "allowed_subject_prefixes": [
+        "tasks.",
+        "events.",
+        "results."
+      ],
+      "denied_subject_prefixes": [
+        "admin.",
+        "system."
+      ]
+    }
+  }
+}

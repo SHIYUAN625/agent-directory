@@ -1,0 +1,184 @@
+# Agent Directory Schema Extension - Tool Attributes
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Tool Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.2x
+#
+# This file defines all custom attributes for the msDS-AgentTool object class.
+
+# ============================================================================
+# msDS-ToolIdentifier
+# Canonical tool ID (e.g., microsoft.powershell, gnu.bash)
+# ============================================================================
+dn: CN=msDS-ToolIdentifier,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolIdentifier
+lDAPDisplayName: msDS-ToolIdentifier
+adminDisplayName: Tool Identifier
+adminDescription: Canonical identifier for the tool (e.g., microsoft.powershell)
+attributeId: 1.3.6.1.4.1.99999.2.20
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolDisplayName
+# Human-readable display name for the tool
+# ============================================================================
+dn: CN=msDS-ToolDisplayName,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolDisplayName
+lDAPDisplayName: msDS-ToolDisplayName
+adminDisplayName: Tool Display Name
+adminDescription: Human-readable name for the tool
+attributeId: 1.3.6.1.4.1.99999.2.21
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolCategory
+# Tool category: shell, office, management, development, network, security, filesystem, data
+# ============================================================================
+dn: CN=msDS-ToolCategory,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolCategory
+lDAPDisplayName: msDS-ToolCategory
+adminDisplayName: Tool Category
+adminDescription: Category classification for the tool (shell, office, management, etc.)
+attributeId: 1.3.6.1.4.1.99999.2.22
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolExecutable
+# Path or identifier for the tool binary/application
+# ============================================================================
+dn: CN=msDS-ToolExecutable,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolExecutable
+lDAPDisplayName: msDS-ToolExecutable
+adminDisplayName: Tool Executable
+adminDescription: Path or identifier for the tool executable
+attributeId: 1.3.6.1.4.1.99999.2.23
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolVersion
+# Minimum required version of the tool
+# ============================================================================
+dn: CN=msDS-ToolVersion,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolVersion
+lDAPDisplayName: msDS-ToolVersion
+adminDisplayName: Tool Version
+adminDescription: Minimum required version of the tool
+attributeId: 1.3.6.1.4.1.99999.2.24
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolRiskLevel
+# Risk classification from 1 (Minimal) to 5 (Critical)
+# ============================================================================
+dn: CN=msDS-ToolRiskLevel,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolRiskLevel
+lDAPDisplayName: msDS-ToolRiskLevel
+adminDisplayName: Tool Risk Level
+adminDescription: Risk classification for the tool (1=Minimal to 5=Critical)
+attributeId: 1.3.6.1.4.1.99999.2.25
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 1
+rangeUpper: 5
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolRequiredTrustLevel
+# Minimum agent trust level required to use this tool
+# ============================================================================
+dn: CN=msDS-ToolRequiredTrustLevel,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolRequiredTrustLevel
+lDAPDisplayName: msDS-ToolRequiredTrustLevel
+adminDisplayName: Tool Required Trust Level
+adminDescription: Minimum agent trust level required to use this tool (0-4)
+attributeId: 1.3.6.1.4.1.99999.2.26
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 4
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolConstraints
+# Usage restrictions and policies when using this tool
+# ============================================================================
+dn: CN=msDS-ToolConstraints,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolConstraints
+lDAPDisplayName: msDS-ToolConstraints
+adminDisplayName: Tool Constraints
+adminDescription: Usage restrictions and policies applied when using this tool
+attributeId: 1.3.6.1.4.1.99999.2.27
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE
+
+# ============================================================================
+# msDS-ToolAuditRequired
+# Whether usage of this tool must be audited
+# ============================================================================
+dn: CN=msDS-ToolAuditRequired,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: attributeSchema
+cn: msDS-ToolAuditRequired
+lDAPDisplayName: msDS-ToolAuditRequired
+adminDisplayName: Tool Audit Required
+adminDescription: Whether usage of this tool must be audited
+attributeId: 1.3.6.1.4.1.99999.2.28
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+showInAdvancedViewOnly: FALSE
+systemOnly: FALSE

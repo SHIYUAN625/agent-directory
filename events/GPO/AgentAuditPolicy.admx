@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Agent Directory Group Policy Administrative Template
+
+    This ADMX file defines Group Policy settings for configuring
+    Agent Directory audit and event logging policies.
+
+    Installation:
+    1. Copy AgentAuditPolicy.admx to %SystemRoot%\PolicyDefinitions
+    2. Copy en-US\AgentAuditPolicy.adml to %SystemRoot%\PolicyDefinitions\en-US
+-->
+<policyDefinitions
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    revision="1.0"
+    schemaVersion="1.0"
+    xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+
+    <policyNamespaces>
+        <target prefix="agentdirectory" namespace="Microsoft.Policies.AgentDirectory" />
+        <using prefix="windows" namespace="Microsoft.Policies.Windows" />
+    </policyNamespaces>
+
+    <resources minRequiredRevision="1.0" />
+
+    <supportedOn>
+        <definitions>
+            <definition name="SUPPORTED_WindowsServer2016"
+                        displayName="$(string.SUPPORTED_WindowsServer2016)" />
+        </definitions>
+    </supportedOn>
+
+    <categories>
+        <category name="AgentDirectory"
+                  displayName="$(string.AgentDirectory)"
+                  explainText="$(string.AgentDirectory_Help)">
+            <parentCategory ref="windows:WindowsComponents" />
+        </category>
+
+        <category name="AgentAudit"
+                  displayName="$(string.AgentAudit)"
+                  explainText="$(string.AgentAudit_Help)">
+            <parentCategory ref="AgentDirectory" />
+        </category>
+
+        <category name="EventLog"
+                  displayName="$(string.EventLog)"
+                  explainText="$(string.EventLog_Help)">
+            <parentCategory ref="AgentDirectory" />
+        </category>
+
+        <category name="Security"
+                  displayName="$(string.Security)"
+                  explainText="$(string.Security_Help)">
+            <parentCategory ref="AgentDirectory" />
+        </category>
+
+        <category name="SandboxAudit"
+                  displayName="$(string.Cat_SandboxAudit)">
+            <parentCategory ref="AgentDirectory" />
+        </category>
+
+        <category name="InstructionGPO"
+                  displayName="$(string.Cat_InstructionGPO)">
+            <parentCategory ref="AgentDirectory" />
+        </category>
+    </categories>
+
+    <policies>
+        <!-- Audit Settings -->
+        <policy name="DefaultAuditLevel"
+                class="Machine"
+                displayName="$(string.DefaultAuditLevel)"
+                explainText="$(string.DefaultAuditLevel_Help)"
+                presentation="$(presentation.DefaultAuditLevel)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit">
+            <parentCategory ref="AgentAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <enum id="AuditLevel" valueName="DefaultAuditLevel">
+                    <item displayName="$(string.AuditLevel_Minimal)">
+                        <value><decimal value="0" /></value>
+                    </item>
+                    <item displayName="$(string.AuditLevel_Standard)">
+                        <value><decimal value="1" /></value>
+                    </item>
+                    <item displayName="$(string.AuditLevel_Detailed)">
+                        <value><decimal value="2" /></value>
+                    </item>
+                    <item displayName="$(string.AuditLevel_Debug)">
+                        <value><decimal value="3" /></value>
+                    </item>
+                </enum>
+            </elements>
+        </policy>
+
+        <policy name="AuditToolExecution"
+                class="Machine"
+                displayName="$(string.AuditToolExecution)"
+                explainText="$(string.AuditToolExecution_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditToolExecution">
+            <parentCategory ref="AgentAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="AuditDelegation"
+                class="Machine"
+                displayName="$(string.AuditDelegation)"
+                explainText="$(string.AuditDelegation_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditDelegation">
+            <parentCategory ref="AgentAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="AuditResourceAccess"
+                class="Machine"
+                displayName="$(string.AuditResourceAccess)"
+                explainText="$(string.AuditResourceAccess_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditResourceAccess">
+            <parentCategory ref="AgentAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="AuditCommandLines"
+                class="Machine"
+                displayName="$(string.AuditCommandLines)"
+                explainText="$(string.AuditCommandLines_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditCommandLines">
+            <parentCategory ref="AgentAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <!-- Event Log Settings -->
+        <policy name="OperationalLogMaxSize"
+                class="Machine"
+                displayName="$(string.OperationalLogMaxSize)"
+                explainText="$(string.OperationalLogMaxSize_Help)"
+                presentation="$(presentation.OperationalLogMaxSize)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\EventLog">
+            <parentCategory ref="EventLog" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <decimal id="MaxSizeMB" valueName="OperationalLogMaxSizeMB"
+                         minValue="10" maxValue="10240" />
+            </elements>
+        </policy>
+
+        <policy name="AdminLogMaxSize"
+                class="Machine"
+                displayName="$(string.AdminLogMaxSize)"
+                explainText="$(string.AdminLogMaxSize_Help)"
+                presentation="$(presentation.AdminLogMaxSize)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\EventLog">
+            <parentCategory ref="EventLog" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <decimal id="MaxSizeMB" valueName="AdminLogMaxSizeMB"
+                         minValue="10" maxValue="10240" />
+            </elements>
+        </policy>
+
+        <policy name="EventRetention"
+                class="Machine"
+                displayName="$(string.EventRetention)"
+                explainText="$(string.EventRetention_Help)"
+                presentation="$(presentation.EventRetention)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\EventLog">
+            <parentCategory ref="EventLog" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <enum id="RetentionPolicy" valueName="RetentionPolicy">
+                    <item displayName="$(string.Retention_Overwrite)">
+                        <value><decimal value="0" /></value>
+                    </item>
+                    <item displayName="$(string.Retention_Archive)">
+                        <value><decimal value="1" /></value>
+                    </item>
+                    <item displayName="$(string.Retention_DoNotOverwrite)">
+                        <value><decimal value="2" /></value>
+                    </item>
+                </enum>
+            </elements>
+        </policy>
+
+        <policy name="EnableDebugLog"
+                class="Machine"
+                displayName="$(string.EnableDebugLog)"
+                explainText="$(string.EnableDebugLog_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\EventLog"
+                valueName="EnableDebugLog">
+            <parentCategory ref="EventLog" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <!-- Security Settings -->
+        <policy name="RequireToolAudit"
+                class="Machine"
+                displayName="$(string.RequireToolAudit)"
+                explainText="$(string.RequireToolAudit_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security"
+                valueName="RequireToolAudit">
+            <parentCategory ref="Security" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="MaxTrustLevel"
+                class="Machine"
+                displayName="$(string.MaxTrustLevel)"
+                explainText="$(string.MaxTrustLevel_Help)"
+                presentation="$(presentation.MaxTrustLevel)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security">
+            <parentCategory ref="Security" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <enum id="TrustLevel" valueName="MaxTrustLevel">
+                    <item displayName="$(string.TrustLevel_Untrusted)">
+                        <value><decimal value="0" /></value>
+                    </item>
+                    <item displayName="$(string.TrustLevel_Basic)">
+                        <value><decimal value="1" /></value>
+                    </item>
+                    <item displayName="$(string.TrustLevel_Standard)">
+                        <value><decimal value="2" /></value>
+                    </item>
+                    <item displayName="$(string.TrustLevel_Elevated)">
+                        <value><decimal value="3" /></value>
+                    </item>
+                    <item displayName="$(string.TrustLevel_System)">
+                        <value><decimal value="4" /></value>
+                    </item>
+                </enum>
+            </elements>
+        </policy>
+
+        <policy name="BlockUnauthorizedTools"
+                class="Machine"
+                displayName="$(string.BlockUnauthorizedTools)"
+                explainText="$(string.BlockUnauthorizedTools_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security"
+                valueName="BlockUnauthorizedTools">
+            <parentCategory ref="Security" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="AlertOnPolicyViolation"
+                class="Machine"
+                displayName="$(string.AlertOnPolicyViolation)"
+                explainText="$(string.AlertOnPolicyViolation_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security"
+                valueName="AlertOnPolicyViolation">
+            <parentCategory ref="Security" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <!-- Sandbox Audit Settings -->
+        <policy name="AuditSandboxLifecycle"
+                class="Machine"
+                displayName="$(string.Pol_AuditSandboxLifecycle)"
+                explainText="$(string.Pol_AuditSandboxLifecycle_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditSandboxLifecycle">
+            <parentCategory ref="SandboxAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="SandboxIsolationMinimum"
+                class="Machine"
+                displayName="$(string.Pol_SandboxIsolationMinimum)"
+                explainText="$(string.Pol_SandboxIsolationMinimum_Help)"
+                presentation="$(presentation.SandboxIsolationMinimum)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security"
+                valueName="SandboxIsolationMinimum">
+            <parentCategory ref="SandboxAudit" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <elements>
+                <enum id="SandboxIsolationLevel" valueName="SandboxIsolationMinimum">
+                    <item displayName="$(string.SandboxIsolation_None)">
+                        <value><decimal value="0" /></value>
+                    </item>
+                    <item displayName="$(string.SandboxIsolation_Bwrap)">
+                        <value><decimal value="1" /></value>
+                    </item>
+                    <item displayName="$(string.SandboxIsolation_AppContainer)">
+                        <value><decimal value="2" /></value>
+                    </item>
+                    <item displayName="$(string.SandboxIsolation_HyperV)">
+                        <value><decimal value="3" /></value>
+                    </item>
+                </enum>
+            </elements>
+        </policy>
+
+        <!-- Instruction GPO Settings -->
+        <policy name="AuditInstructionGPO"
+                class="Machine"
+                displayName="$(string.Pol_AuditInstructionGPO)"
+                explainText="$(string.Pol_AuditInstructionGPO_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Audit"
+                valueName="AuditInstructionGPO">
+            <parentCategory ref="InstructionGPO" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+
+        <policy name="RequireGPOIntegrityCheck"
+                class="Machine"
+                displayName="$(string.Pol_RequireGPOIntegrityCheck)"
+                explainText="$(string.Pol_RequireGPOIntegrityCheck_Help)"
+                key="SOFTWARE\Policies\Microsoft\AgentDirectory\Security"
+                valueName="RequireGPOIntegrityCheck">
+            <parentCategory ref="InstructionGPO" />
+            <supportedOn ref="SUPPORTED_WindowsServer2016" />
+            <enabledValue><decimal value="1" /></enabledValue>
+            <disabledValue><decimal value="0" /></disabledValue>
+        </policy>
+    </policies>
+</policyDefinitions>

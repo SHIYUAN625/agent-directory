@@ -1,0 +1,203 @@
+# Autonomous Enterprise AD Schema Extension - Instruction GPO Attributes (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Instruction GPO Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.6x
+# Agent linkage attribute OID: 1.3.6.1.4.1.{PEN}.2.22
+#
+# This file defines custom attributes for the x-agentInstructionGPO object class.
+# Instruction GPOs follow the AD Group Policy pattern:
+#   - Metadata (scope, priority, version) stored in AD
+#   - Content (system prompt / instructions) stored in SYSVOL as markdown
+#   - Linked to agents directly or scoped by type/trust/group
+#   - Layered by priority with configurable merge strategy
+
+# ============================================================================
+# AGENT LINKAGE ATTRIBUTE
+# ============================================================================
+
+# x-agent-InstructionGPOs
+# Multi-valued DNs linking an agent to its instruction GPOs.
+# Agents inherit instructions from directly linked GPOs plus
+# any GPOs that match by scope (type, trust level, group).
+dn: CN=x-agent-InstructionGPOs,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-agent-InstructionGPOs
+lDAPDisplayName: x-agent-InstructionGPOs
+adminDisplayName: Agent Instruction GPOs
+adminDescription: Links to instruction GPO objects that provide this agent's system prompt
+attributeId: 1.3.6.1.4.1.99999.2.22
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 1
+
+# ============================================================================
+# GPO IDENTITY
+# ============================================================================
+
+# x-gpo-DisplayName
+# Human-readable name for the instruction GPO
+dn: CN=x-gpo-DisplayName,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-DisplayName
+lDAPDisplayName: x-gpo-DisplayName
+adminDisplayName: GPO Display Name
+adminDescription: Human-readable display name for the instruction GPO
+attributeId: 1.3.6.1.4.1.99999.2.60
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-gpo-InstructionPath
+# SYSVOL-relative path to instruction content
+# Format: AgentInstructions/{gpo-name}/instructions.md
+# Content is markdown that becomes the agent's system prompt (or a layer of it)
+dn: CN=x-gpo-InstructionPath,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-InstructionPath
+lDAPDisplayName: x-gpo-InstructionPath
+adminDisplayName: GPO Instruction Path
+adminDescription: SYSVOL-relative path to instruction content (markdown)
+attributeId: 1.3.6.1.4.1.99999.2.61
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# ============================================================================
+# GPO PRECEDENCE
+# ============================================================================
+
+# x-gpo-Priority
+# Integer priority for merge ordering (higher priority = applied later = wins conflicts)
+# Suggested ranges:
+#   0-99:    Base instructions (apply to all agents)
+#   100-199: Type-specific instructions (by agent type)
+#   200-299: Trust-level-specific instructions
+#   300-399: Group-specific instructions
+#   400+:    Agent-specific overrides
+dn: CN=x-gpo-Priority,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-Priority
+lDAPDisplayName: x-gpo-Priority
+adminDisplayName: GPO Priority
+adminDescription: Priority for instruction merge ordering (higher = applied later, wins conflicts)
+attributeId: 1.3.6.1.4.1.99999.2.62
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 999
+
+# x-gpo-MergeStrategy
+# How this GPO's instructions combine with lower-priority instructions:
+#   prepend  - Insert before existing instructions
+#   append   - Add after existing instructions (default)
+#   replace  - Discard all lower-priority instructions
+dn: CN=x-gpo-MergeStrategy,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-MergeStrategy
+lDAPDisplayName: x-gpo-MergeStrategy
+adminDisplayName: GPO Merge Strategy
+adminDescription: How instructions merge with lower-priority GPOs (prepend, append, replace)
+attributeId: 1.3.6.1.4.1.99999.2.63
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# ============================================================================
+# GPO SCOPE
+# ============================================================================
+
+# x-gpo-AppliesToTypes
+# Multi-valued: agent types this GPO applies to
+# If empty, applies to all agents (when combined with other scope filters)
+dn: CN=x-gpo-AppliesToTypes,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-AppliesToTypes
+lDAPDisplayName: x-gpo-AppliesToTypes
+adminDisplayName: GPO Applies To Types
+adminDescription: Agent types this instruction GPO applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.64
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-gpo-AppliesToTrustLevels
+# Multi-valued: trust levels this GPO applies to
+dn: CN=x-gpo-AppliesToTrustLevels,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-AppliesToTrustLevels
+lDAPDisplayName: x-gpo-AppliesToTrustLevels
+adminDisplayName: GPO Applies To Trust Levels
+adminDescription: Trust levels this instruction GPO applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.65
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: FALSE
+searchFlags: 0
+
+# x-gpo-AppliesToGroups
+# Multi-valued DNs: AD groups this GPO applies to
+# If an agent is a member of any listed group, the GPO applies.
+dn: CN=x-gpo-AppliesToGroups,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-AppliesToGroups
+lDAPDisplayName: x-gpo-AppliesToGroups
+adminDisplayName: GPO Applies To Groups
+adminDescription: AD group DNs this instruction GPO applies to (membership-based scoping)
+attributeId: 1.3.6.1.4.1.99999.2.66
+attributeSyntax: 2.5.5.1
+oMSyntax: 127
+isSingleValued: FALSE
+searchFlags: 0
+
+# ============================================================================
+# GPO STATE
+# ============================================================================
+
+# x-gpo-Enabled
+# Whether the GPO is currently active
+dn: CN=x-gpo-Enabled,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-Enabled
+lDAPDisplayName: x-gpo-Enabled
+adminDisplayName: GPO Enabled
+adminDescription: Whether the instruction GPO is currently active
+attributeId: 1.3.6.1.4.1.99999.2.67
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-gpo-Version
+# Version string for instruction content (for cache invalidation)
+# Agents can cache instructions and re-fetch only when version changes.
+dn: CN=x-gpo-Version,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-gpo-Version
+lDAPDisplayName: x-gpo-Version
+adminDisplayName: GPO Version
+adminDescription: Version string for instruction content (cache invalidation)
+attributeId: 1.3.6.1.4.1.99999.2.68
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0

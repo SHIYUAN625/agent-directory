@@ -1,0 +1,68 @@
+# Autonomous Enterprise AD Schema Extension - Tool Object Class (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.2
+#
+# This file defines the x-agentTool structural class.
+# Prerequisites: 02-tool-attributes.ldif must be loaded first.
+
+# ============================================================================
+# x-agentTool Object Class
+#
+# Inherits from: top
+#
+# This class represents tools and applications that agents can be authorized
+# to use. Tools are registered in the directory and agents are granted or
+# denied access to specific tools.
+#
+# Tool Authorization Logic:
+#   1. Check if tool in agent's DeniedTools -> DENY
+#   2. Check if tool in agent's AuthorizedTools -> ALLOW
+#   3. Check if agent in tool-grant group -> ALLOW
+#   4. Check if agent.TrustLevel >= tool.RequiredTrust -> ALLOW
+#   5. Check tool constraints -> ALLOW/DENY
+#   6. Default: DENY
+# ============================================================================
+
+dn: CN=x-agentTool,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: classSchema
+cn: x-agentTool
+lDAPDisplayName: x-agentTool
+adminDisplayName: Agent Tool
+adminDescription: Tool or application that agents can be authorized to use
+governsId: 1.3.6.1.4.1.99999.1.2
+objectClassCategory: 1
+subClassOf: top
+rdnAttId: cn
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+defaultObjectCategory: CN=x-agentTool,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+#
+# mustContain: Required attributes for tools
+#
+mustContain: cn
+mustContain: x-tool-Identifier
+#
+# mayContain: Optional attributes for tools
+#
+mayContain: x-tool-DisplayName
+mayContain: x-tool-Category
+mayContain: x-tool-RiskLevel
+mayContain: x-tool-RequiredTrust
+mayContain: x-tool-Constraints
+mayContain: x-tool-AuditRequired
+mayContain: x-tool-Executable
+mayContain: x-tool-Version
+mayContain: x-tool-Schema
+mayContain: description
+#
+# possSuperiors: Containers where tools can be created
+#
+possSuperiors: container
+possSuperiors: organizationalUnit
+

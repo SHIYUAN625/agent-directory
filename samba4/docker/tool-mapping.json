@@ -1,0 +1,22 @@
+{
+  "tool_mapping": {
+    "filesystem.read": ["read_file", "list_directory", "search_files", "grep"],
+    "filesystem.write": ["write_file"],
+    "filesystem.delete": [],
+    "git.cli": [],
+    "python.interpreter": [],
+    "node.interpreter": [],
+    "gnu.bash": ["run_command"],
+    "gnu.bash.restricted": ["run_command"],
+    "llm.inference": []
+  },
+  "command_tool_prefixes": {
+    "git.cli": ["git "],
+    "python.interpreter": ["python ", "python3 ", "pip ", "pip3 "],
+    "node.interpreter": ["node ", "npm ", "npx "],
+    "cargo.build": ["cargo "],
+    "make.build": ["make "],
+    "docker.cli": ["docker ", "docker-compose "]
+  },
+  "unrestricted_shell_tools": ["gnu.bash"]
+}

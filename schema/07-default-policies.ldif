@@ -1,0 +1,166 @@
+# Agent Directory Schema Extension - Default Policy Definitions
+#
+# IMPORTANT: Replace DC=X with your actual domain components
+# Example: DC=corp,DC=contoso,DC=com
+#
+# Policy content (JSON) is stored in SYSVOL at AgentPolicies/{policy-name}/policy.json
+
+# ============================================================================
+# BASE POLICIES (Priority 0-99)
+# Apply to all agents regardless of type or trust level
+# ============================================================================
+
+dn: CN=base-security,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: base-security
+msDS-PolicyIdentifier: base-security
+msDS-PolicyType: security
+msDS-PolicyPriority: 0
+msDS-PolicyPath: AgentPolicies/base-security/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Base security policy applied to all agents
+
+dn: CN=base-behavior,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: base-behavior
+msDS-PolicyIdentifier: base-behavior
+msDS-PolicyType: behavior
+msDS-PolicyPriority: 10
+msDS-PolicyPath: AgentPolicies/base-behavior/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Base behavior policy for all agents
+
+dn: CN=base-resource,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: base-resource
+msDS-PolicyIdentifier: base-resource
+msDS-PolicyType: resource
+msDS-PolicyPriority: 20
+msDS-PolicyPath: AgentPolicies/base-resource/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Base resource limits for all agents
+
+dn: CN=base-network,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: base-network
+msDS-PolicyIdentifier: base-network
+msDS-PolicyType: network
+msDS-PolicyPriority: 30
+msDS-PolicyPath: AgentPolicies/base-network/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Base network policy for all agents
+
+# ============================================================================
+# TYPE POLICIES (Priority 100-199)
+# Apply to specific agent types
+# ============================================================================
+
+dn: CN=type-worker,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: type-worker
+msDS-PolicyIdentifier: type-worker
+msDS-PolicyType: behavior
+msDS-PolicyPriority: 100
+msDS-PolicyPath: AgentPolicies/type-worker/policy.json
+msDS-PolicyAppliesToTypes: autonomous
+msDS-PolicyAppliesToTypes: assistant
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Policy for worker agents (autonomous, assistant)
+
+dn: CN=type-coordinator,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: type-coordinator
+msDS-PolicyIdentifier: type-coordinator
+msDS-PolicyType: behavior
+msDS-PolicyPriority: 100
+msDS-PolicyPath: AgentPolicies/type-coordinator/policy.json
+msDS-PolicyAppliesToTypes: coordinator
+msDS-PolicyAppliesToTypes: orchestrator
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Policy for coordinator agents
+
+dn: CN=type-tool,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: type-tool
+msDS-PolicyIdentifier: type-tool
+msDS-PolicyType: behavior
+msDS-PolicyPriority: 100
+msDS-PolicyPath: AgentPolicies/type-tool/policy.json
+msDS-PolicyAppliesToTypes: tool
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Policy for tool agents (specialized single-purpose)
+
+# ============================================================================
+# TRUST LEVEL POLICIES (Priority 150)
+# Apply to agents at specific trust levels
+# ============================================================================
+
+dn: CN=trust-untrusted,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: trust-untrusted
+msDS-PolicyIdentifier: trust-untrusted
+msDS-PolicyType: security
+msDS-PolicyPriority: 150
+msDS-PolicyPath: AgentPolicies/trust-untrusted/policy.json
+msDS-PolicyAppliesToTrustLevels: 0
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Restrictive policy for untrusted agents (trust level 0)
+
+dn: CN=trust-elevated,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: trust-elevated
+msDS-PolicyIdentifier: trust-elevated
+msDS-PolicyType: security
+msDS-PolicyPriority: 150
+msDS-PolicyPath: AgentPolicies/trust-elevated/policy.json
+msDS-PolicyAppliesToTrustLevels: 3
+msDS-PolicyAppliesToTrustLevels: 4
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Expanded permissions for elevated trust agents (level 3-4)
+
+# ============================================================================
+# CAPABILITY POLICIES (Priority 120)
+# Apply to agents with specific capabilities
+# ============================================================================
+
+dn: CN=capability-code-review,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: capability-code-review
+msDS-PolicyIdentifier: capability-code-review
+msDS-PolicyType: behavior
+msDS-PolicyPriority: 120
+msDS-PolicyPath: AgentPolicies/capability-code-review/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Policy for agents with code review capability
+
+dn: CN=capability-security-analysis,CN=Agent Policies,CN=System,DC=X
+changetype: add
+objectClass: msDS-AgentPolicy
+cn: capability-security-analysis
+msDS-PolicyIdentifier: capability-security-analysis
+msDS-PolicyType: security
+msDS-PolicyPriority: 120
+msDS-PolicyPath: AgentPolicies/capability-security-analysis/policy.json
+msDS-PolicyEnabled: TRUE
+msDS-PolicyVersion: 1.0.0
+description: Policy for agents with security analysis capability

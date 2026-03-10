@@ -1,0 +1,59 @@
+{
+  "$schema": "https://autonomy.local/schemas/agent-policy-v1.json",
+  "version": "1.0.0",
+  "name": "type-coordinator",
+  "description": "Policy for coordinator agents (coordinator, orchestrator types)",
+  "settings": {
+    "execution": {
+      "max_iterations": 200,
+      "checkpoint_interval_steps": 10,
+      "allow_goal_decomposition": true
+    },
+    "escalation": {
+      "escalate_on_blocked": true,
+      "escalate_on_error_threshold": 5,
+      "can_escalate_to_human": true
+    },
+    "tools": {
+      "allow": [
+        "filesystem.read",
+        "filesystem.write",
+        "git.cli",
+        "python.interpreter",
+        "api.http",
+        "nats.client",
+        "jq.processor",
+        "llm.inference",
+        "agent.spawn",
+        "agent.delegate",
+        "ray.submit",
+        "ray.status",
+        "ldap.search"
+      ]
+    },
+    "compute": {
+      "max_memory_mb": 8192,
+      "max_runtime_seconds": 7200
+    },
+    "llm": {
+      "daily_token_limit": 5000000,
+      "max_context_tokens": 200000
+    },
+    "agents": {
+      "max_spawned_agents": 10,
+      "max_delegated_tasks": 50,
+      "can_supervise_workers": true,
+      "can_reassign_tasks": true
+    },
+    "behavior": {
+      "pull_from_queue": true,
+      "accept_escalations": true,
+      "manage_workforce": true,
+      "report_to_human": true
+    },
+    "state": {
+      "shared_state_access": true,
+      "state_write_access": true
+    }
+  }
+}

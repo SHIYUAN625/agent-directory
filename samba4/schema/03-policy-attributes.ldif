@@ -1,0 +1,148 @@
+# Autonomous Enterprise AD Schema Extension - Policy Attributes (Samba4)
+#
+# IMPORTANT: Before production use, replace 99999 with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Policy Attribute OIDs: 1.3.6.1.4.1.{PEN}.2.4x
+#
+# This file defines custom attributes for the x-agentPolicy object class.
+# Policies follow a GPO-like pattern: metadata in AD, content in SYSVOL.
+
+# ============================================================================
+# POLICY IDENTITY
+# ============================================================================
+
+# x-policy-Identifier
+# Unique policy name (e.g., base-security, developer-agents)
+dn: CN=x-policy-Identifier,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Identifier
+lDAPDisplayName: x-policy-Identifier
+adminDisplayName: Policy Identifier
+adminDescription: Unique identifier for the policy
+attributeId: 1.3.6.1.4.1.99999.2.40
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-policy-Type
+# Policy type: security | behavior | resource | network
+dn: CN=x-policy-Type,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Type
+lDAPDisplayName: x-policy-Type
+adminDisplayName: Policy Type
+adminDescription: Type of policy (security, behavior, resource, network)
+attributeId: 1.3.6.1.4.1.99999.2.41
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 1
+
+# x-policy-Priority
+# Integer priority (higher wins on conflict)
+# Suggested ranges:
+#   0-99: Base policies (apply to all agents)
+#   100-199: Type policies (by agent type)
+#   200-299: Agent-specific overrides
+dn: CN=x-policy-Priority,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Priority
+lDAPDisplayName: x-policy-Priority
+adminDisplayName: Policy Priority
+adminDescription: Priority for policy merge (higher wins on conflict)
+attributeId: 1.3.6.1.4.1.99999.2.42
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: TRUE
+searchFlags: 1
+rangeLower: 0
+rangeUpper: 999
+
+# x-policy-Path
+# Path to JSON policy content in SYSVOL
+# Format: AgentPolicies/{policy-name}/policy.json
+dn: CN=x-policy-Path,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Path
+lDAPDisplayName: x-policy-Path
+adminDisplayName: Policy Path
+adminDescription: Path to JSON policy content in SYSVOL
+attributeId: 1.3.6.1.4.1.99999.2.43
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+
+# ============================================================================
+# POLICY SCOPE
+# ============================================================================
+
+# x-policy-AppliesToTypes
+# Multi-valued: agent types this policy applies to
+# If empty, applies to all agents
+dn: CN=x-policy-AppliesToTypes,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-AppliesToTypes
+lDAPDisplayName: x-policy-AppliesToTypes
+adminDisplayName: Policy Applies To Types
+adminDescription: Agent types this policy applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.44
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: FALSE
+searchFlags: 1
+
+# x-policy-AppliesToTrustLevels
+# Multi-valued: trust levels this policy applies to
+# If empty, applies to all trust levels
+dn: CN=x-policy-AppliesToTrustLevels,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-AppliesToTrustLevels
+lDAPDisplayName: x-policy-AppliesToTrustLevels
+adminDisplayName: Policy Applies To Trust Levels
+adminDescription: Trust levels this policy applies to (empty = all)
+attributeId: 1.3.6.1.4.1.99999.2.45
+attributeSyntax: 2.5.5.9
+oMSyntax: 2
+isSingleValued: FALSE
+searchFlags: 0
+
+# x-policy-Enabled
+# Whether the policy is currently active
+dn: CN=x-policy-Enabled,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Enabled
+lDAPDisplayName: x-policy-Enabled
+adminDisplayName: Policy Enabled
+adminDescription: Whether the policy is currently active
+attributeId: 1.3.6.1.4.1.99999.2.46
+attributeSyntax: 2.5.5.8
+oMSyntax: 1
+isSingleValued: TRUE
+searchFlags: 0
+
+# x-policy-Version
+# Version string for policy content (for cache invalidation)
+dn: CN=x-policy-Version,CN=Schema,CN=Configuration,DC=autonomy,DC=local
+changetype: add
+objectClass: attributeSchema
+cn: x-policy-Version
+lDAPDisplayName: x-policy-Version
+adminDisplayName: Policy Version
+adminDescription: Version string for policy content
+attributeId: 1.3.6.1.4.1.99999.2.47
+attributeSyntax: 2.5.5.12
+oMSyntax: 64
+isSingleValued: TRUE
+searchFlags: 0
+

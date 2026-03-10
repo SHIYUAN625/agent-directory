@@ -1,0 +1,55 @@
+# Agent Directory Schema Extension - Sandbox Object Class
+#
+# IMPORTANT: Before production use, replace {PEN} with your IANA Private Enterprise Number
+# To obtain a PEN (free): https://www.iana.org/assignments/enterprise-numbers/
+#
+# Base OID: 1.3.6.1.4.1.{PEN}
+# Class OID: 1.3.6.1.4.1.{PEN}.1.3
+#
+# This file defines the msDS-AgentSandbox structural class.
+# Prerequisites: 01b-sandbox-attributes.ldif must be loaded first.
+
+# ============================================================================
+# msDS-AgentSandbox Object Class
+#
+# Inherits from: computer
+#
+# Inheritance chain: top -> person -> organizationalPerson -> user -> computer -> msDS-AgentSandbox
+#
+# Sandboxes represent execution environments where agents run.
+# Inheriting from computer provides:
+#   - dNSHostName for network identity
+#   - servicePrincipalName for Kerberos
+#   - objectSid/sAMAccountName for security principal
+#   - msDS-AllowedToDelegateTo for RBCD (resource receives delegation)
+#   - userAccountControl for account state
+# ============================================================================
+
+dn: CN=msDS-AgentSandbox,CN=Schema,CN=Configuration,DC=X
+changetype: add
+objectClass: classSchema
+cn: msDS-AgentSandbox
+lDAPDisplayName: msDS-AgentSandbox
+adminDisplayName: Agent Sandbox
+adminDescription: Execution environment for AI/ML agents with resource isolation
+governsId: 1.3.6.1.4.1.99999.1.3
+objectClassCategory: 3
+subClassOf: top
+showInAdvancedViewOnly: FALSE
+defaultHidingValue: FALSE
+systemOnly: FALSE
+#
+# mayContain: Optional attributes specific to sandboxes
+#
+mayContain: msDS-SandboxEndpoint
+mayContain: msDS-SandboxAgents
+mayContain: msDS-SandboxResourcePolicy
+mayContain: msDS-SandboxNetworkPolicy
+mayContain: msDS-SandboxSecurityProfile
+mayContain: msDS-SandboxStatus
+#
+# possSuperiors: Containers where sandboxes can be created
+#
+possSuperiors: organizationalUnit
+possSuperiors: container
+possSuperiors: domainDNS
